@@ -1,0 +1,10 @@
+menu "URC communication"
+    choice URC_BOARD_ROLE
+        prompt "Board role (use a different role on each ESP)"
+        default URC_BOARD_A
+        config URC_BOARD_A
+            bool "Board A (send 0x101, receive 0x102)"
+        config URC_BOARD_B
+            bool "Board B (send 0x102, receive 0x101)"
+    endchoice
+endmenu
