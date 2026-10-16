@@ -2,5 +2,7 @@
 # CMakeLists in this exact order for cmake to work correctly
 cmake_minimum_required(VERSION 3.22)
 
+# relative file path, needs to be changed on project location
+set(EXTRA_COMPONENT_DIRS "../components")
 include($ENV{IDF_PATH}/tools/cmake/project.cmake)
-project(URC Main Body)
+project(URC_Main_Body)
