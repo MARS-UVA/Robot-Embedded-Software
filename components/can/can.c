@@ -44,7 +44,33 @@ esp_err_t CAN_start(void)
     return ESP_OK;
 }
 
-esp_err_t CAN_stop(void) 
-{
-    return ESP_ERR_NOT_SUPPORTED;
+esp_err_t CAN_stop(void) {
+    twai_status_info_t status_info;  //Defines status & then we will pour info into it
+    
+    // 1. Get the current status of the TWAI driver
+    esp_err_t err = twai_get_status_info(&status_info);
+    if (err != ESP_OK) {
+        printf("Error getting TWAI status. Driver might not be installed.\n");
+        return err;
+    }
+
+    // 2. Check if the driver is already stopped
+    if (status_info.state == TWAI_STATE_STOPPED) {
+        printf("TWAI driver is already stopped.\n");
+        return ESP_OK; // Safe exit, no action needed
+    }
+
+    // 3. Stop the driver safely if it is actively running
+    if (status_info.state == TWAI_STATE_RUNNING) {
+        printf("TWAI driver is running. Stopping it now...\n");
+        return twai_stop();
+    }
+
+    // 4. Handle edge cases (e.g., if the driver is stuck in Bus-Off or Recovery)
+    if (status_info.state == TWAI_STATE_BUS_OFF || status_info.state == TWAI_STATE_RECOVERY) {
+        printf("TWAI driver is in a faulted/recovery state (%d). Stopping driver.\n", status_info.state);
+        return twai_stop(); 
+    }
+
+    return ESP_ERR_INVALID_STATE;
 }
