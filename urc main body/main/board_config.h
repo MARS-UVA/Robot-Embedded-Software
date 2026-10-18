@@ -9,7 +9,7 @@
 #define BOARD_POLL_INTERVAL_MS 50
 
 #ifdef CONFIG_URC_BOARD_B
-#define BOARD_NODE_ID 0xs102U
+#define BOARD_NODE_ID 0x102U
 #define BOARD_PEER_ID 0x101U
 #else
 #define BOARD_NODE_ID 0x101U
