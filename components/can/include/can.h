@@ -1,8 +1,8 @@
 //allows file to be included only once
 #pragma once
 #include <stdint.h>
-#include <stdbool.h>
-#include <esp_err.h>
+#include <stdbool.h>    // bool types
+#include <esp_err.h>    // provides error types
 
 typedef struct {
     int         tx_gpio;
