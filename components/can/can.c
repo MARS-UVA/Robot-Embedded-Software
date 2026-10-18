@@ -17,7 +17,21 @@ static bool s_started = false; // node enabled status
 
 esp_err_t CAN_init(const CAN_config_t *config) 
 {
-    return ESP_ERR_NOT_SUPPORTED;
+    ESP_RETURN_ON_FALSE(s_node == NULL,  ESP_ERR_INVALID_STATE, TAG, "node already initialized");
+    ESP_RETURN_ON_FALSE(!s_started, ESP_ERR_INVALID_STATE, TAG, "cannot initialize an already running node");
+
+    twai_onchip_node_config_t node_cfg = 
+    {
+        .io_cfg.tx = config->tx_gpio,
+        .io_cfg.rx = config->rx_gpio,
+        .io_cfg.quanta_clk_out = -1,
+        .io_cfg.bus_off_indicator = -1,
+        .bit_timing.bitrate = config->bitrate,
+        .tx_queue_depth = config->tx_queue_depth,
+        .flags.enable_self_test = config->self_test,
+        .flags.enable_loopback = config->self_test,
+        .fail_retry_cnt = -1                    // dont retry on filed frame
+    };
 }
 
 esp_err_t CAN_deinit(void) 
@@ -44,6 +58,7 @@ esp_err_t CAN_start(void)
     return ESP_OK;
 }
 
+// Refactor to match other code
 esp_err_t CAN_stop(void) {
     twai_status_info_t status_info;  //Defines status & then we will pour info into it
     
