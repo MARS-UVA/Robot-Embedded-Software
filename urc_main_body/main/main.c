@@ -20,7 +20,7 @@ void app_main(void)
         .rx_gpio = CAN_RX_GPIO,
         .bitrate = CAN_BITRATE,
         .tx_queue_depth = 10,
-        .self_test = true,      // single board, no transceiver needed
+        .self_test = false,      // allows for testing with single module
     };
 
     ESP_ERROR_CHECK(CAN_init(&can_cfg));
@@ -38,8 +38,10 @@ void app_main(void)
         memcpy(frame.data, &counter, sizeof(counter));     // 4 bytes, little-endian
         esp_err_t err = CAN_send(&frame, 100);
 
+        // wait 1000 ms = 1 second
         vTaskDelay(pdMS_TO_TICKS(1000));
 
+        // Log results for debug
         CAN_stats_t stats;
         CAN_get_stats(&stats);
         ESP_LOGI(TAG, "sent #%lu: %s | tx ok=%lu failed=%lu",

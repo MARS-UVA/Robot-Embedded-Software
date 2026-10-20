@@ -13,14 +13,14 @@ typedef struct {
 } CAN_config_t;
 
 
-#define CAN_MAX_DATA_LEN 8
+#define CAN_MAX_DATA_LEN 8              // maximum number bytes a frame can hold
 #define CAN_STD_ID_MAX   0x7FF          // largest 11-bit standard ID
 #define CAN_EXT_ID_MAX   0x1FFFFFFF     // largest 29-bit extended ID
 
 typedef struct {
     uint32_t    id;
     bool        extended;
-    uint8_t     len;
+    uint8_t     len;                        // how many bytes frame holds
     uint8_t     data[CAN_MAX_DATA_LEN];
 } CAN_frame_t;
 
