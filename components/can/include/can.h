@@ -21,10 +21,10 @@ typedef struct {
     uint8_t     data[CAN_MAX_DATA_LEN];
 } CAN_frame_t;
 
-esp_err_t CAN_init(const config *);
-esp_err_t CAN_deinit();
-esp_err_t CAN_start();
-esp_err_t CAN_stop();
+esp_err_t CAN_init(const CAN_config_t *config);
+esp_err_t CAN_deinit(void);
+esp_err_t CAN_start(void);
+esp_err_t CAN_stop(void);
 
 
 //static IRAM_ATTR bool twai_sender_tx_done_callback(twai_node_handle_t handle, const twai_tx_done_event_data_t *edata, void *user_ctx);

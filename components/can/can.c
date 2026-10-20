@@ -15,12 +15,13 @@ static bool s_started = false; // node enabled status
 //static IRAM_ATTR bool twai_sender_tx_done_callback(twai_node_handle_t handle, const twai_tx_done_event_data_t *edata, void *user_ctx);
 //static IRAM_ATTR bool twai_sender_on_error_callback(twai_node_handle_t handle, const twai_error_event_data_t *edata, void *user_ctx);
 
-esp_err_t CAN_init(const CAN_config_t *config) 
+esp_err_t CAN_init(const CAN_config_t *config)
 {
+    ESP_RETURN_ON_FALSE(config != NULL, ESP_ERR_INVALID_ARG, TAG, "config is NULL");
+    ESP_RETURN_ON_FALSE(config->bitrate > 0, ESP_ERR_INVALID_ARG, TAG, "bitrate must be > 0");
     ESP_RETURN_ON_FALSE(s_node == NULL,  ESP_ERR_INVALID_STATE, TAG, "node already initialized");
-    ESP_RETURN_ON_FALSE(!s_started, ESP_ERR_INVALID_STATE, TAG, "cannot initialize an already running node");
 
-    twai_onchip_node_config_t node_cfg = 
+    twai_onchip_node_config_t node_cfg =
     {
         .io_cfg.tx = config->tx_gpio,
         .io_cfg.rx = config->rx_gpio,
@@ -30,19 +31,28 @@ esp_err_t CAN_init(const CAN_config_t *config)
         .tx_queue_depth = config->tx_queue_depth,
         .flags.enable_self_test = config->self_test,
         .flags.enable_loopback = config->self_test,
-        .fail_retry_cnt = -1                    // dont retry on filed frame
+        .fail_retry_cnt = -1                    // retry a failed frame forever
     };
+
+    // driver copies node_cfg and writes the new handle into s_node
+    ESP_RETURN_ON_ERROR(twai_new_node_onchip(&node_cfg, &s_node), TAG, "failed to create node");
+    
+    ESP_LOGI(TAG, "initialized: tx=%d rx=%d bitrate=%lu%s",
+             config->tx_gpio, config->rx_gpio, config->bitrate,
+             config->self_test ? " (self-test)" : "");
+    return ESP_OK;
 }
 
-esp_err_t CAN_deinit(void) 
+esp_err_t CAN_deinit(void)
 {
     ESP_RETURN_ON_FALSE(s_node != NULL, ESP_ERR_INVALID_STATE, TAG, "cannot deinitialize null CAN node");
     ESP_RETURN_ON_FALSE(!s_started, ESP_ERR_INVALID_STATE, TAG, "cannot deinitialize running CAN node");
 
-    twai_node_delete(s_node);
+    ESP_RETURN_ON_ERROR(twai_node_delete(s_node), TAG, "delete failed");
     s_node = NULL;
 
-    return ESP_OK; // change this
+    ESP_LOGI(TAG, "deinitialized");
+    return ESP_OK;
 }
 
 esp_err_t CAN_start(void)
@@ -58,34 +68,15 @@ esp_err_t CAN_start(void)
     return ESP_OK;
 }
 
-// Refactor to match other code
-esp_err_t CAN_stop(void) {
-    twai_status_info_t status_info;  //Defines status & then we will pour info into it
-    
-    // 1. Get the current status of the TWAI driver
-    esp_err_t err = twai_get_status_info(&status_info);
-    if (err != ESP_OK) {
-        printf("Error getting TWAI status. Driver might not be installed.\n");
-        return err;
-    }
+esp_err_t CAN_stop(void)
+{
+    // check for valid state before stopping CAN
+    ESP_RETURN_ON_FALSE(s_node != NULL, ESP_ERR_INVALID_STATE, TAG, "not initialized");
+    ESP_RETURN_ON_FALSE(s_started, ESP_ERR_INVALID_STATE, TAG, "not started");
 
-    // 2. Check if the driver is already stopped
-    if (status_info.state == TWAI_STATE_STOPPED) {
-        printf("TWAI driver is already stopped.\n");
-        return ESP_OK; // Safe exit, no action needed
-    }
+    ESP_RETURN_ON_ERROR(twai_node_disable(s_node), TAG, "disable failed");
 
-    // 3. Stop the driver safely if it is actively running
-    if (status_info.state == TWAI_STATE_RUNNING) {
-        printf("TWAI driver is running. Stopping it now...\n");
-        return twai_stop();
-    }
-
-    // 4. Handle edge cases (e.g., if the driver is stuck in Bus-Off or Recovery)
-    if (status_info.state == TWAI_STATE_BUS_OFF || status_info.state == TWAI_STATE_RECOVERY) {
-        printf("TWAI driver is in a faulted/recovery state (%d). Stopping driver.\n", status_info.state);
-        return twai_stop(); 
-    }
-
-    return ESP_ERR_INVALID_STATE;
+    s_started = false;
+    ESP_LOGI(TAG, "stopped");
+    return ESP_OK;
 }
