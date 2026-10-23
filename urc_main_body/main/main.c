@@ -20,7 +20,7 @@ void app_main(void)
         .rx_gpio = CAN_RX_GPIO,
         .bitrate = CAN_BITRATE,
         .tx_queue_depth = 10,
-        .self_test = false,      // allows for testing with single module
+        .self_test = false,      // test without ACK
     };
 
     ESP_ERROR_CHECK(CAN_init(&can_cfg));

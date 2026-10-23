@@ -20,7 +20,7 @@ static bool s_started = false; // node enabled status
 // so the frame must live here instead of on the caller's stack.
 typedef struct {
     twai_frame_t frame;                 // must stay first: on_tx_done casts the frame pointer back to its slot
-    uint8_t      data[CAN_MAX_DATA_LEN];
+    uint8_t      data[CAN_MAX_DATA_LEN];    // actual data buffer
 } tx_slot_t;
 
 static tx_slot_t *s_tx_slots = NULL;        // pool of transmit buffers
@@ -33,7 +33,7 @@ static volatile uint32_t s_tx_failed = 0;
 
 // Runs in interrupt context when the hardware finishes with a frame (sent or given up).
 // Must be short and non-blocking: count the result and hand the slot back to the free list.
-static bool IRAM_ATTR on_tx_done(twai_node_handle_t handle, const twai_tx_done_event_data_t *edata, void *user_ctx)
+static bool on_tx_done(twai_node_handle_t handle, const twai_tx_done_event_data_t *edata, void *user_ctx)
 {
     if (edata->is_tx_success) {
         s_tx_success++;
@@ -50,7 +50,7 @@ static bool IRAM_ATTR on_tx_done(twai_node_handle_t handle, const twai_tx_done_e
 // Mark every slot as free. Only safe while the node is disabled (no interrupts using the slots).
 static void tx_pool_reset(void)
 {
-    xQueueReset(s_tx_free);
+    xQueueReset(s_tx_free); // queue of availble addresses in tx slot pool
     for (uint32_t i = 0; i < s_tx_slot_count; i++) {
         tx_slot_t *slot = &s_tx_slots[i];
         xQueueSend(s_tx_free, &slot, 0);
@@ -63,7 +63,7 @@ static void tx_pool_free(void)
         vQueueDelete(s_tx_free);
         s_tx_free = NULL;
     }
-    free(s_tx_slots);
+    free(s_tx_slots); // Note: MAKE SURE THIS IS ONLY CALLED WHEN DENIT CAN
     s_tx_slots = NULL;
     s_tx_slot_count = 0;
 }
@@ -75,7 +75,7 @@ esp_err_t CAN_init(const CAN_config_t *config)
     ESP_RETURN_ON_FALSE(config->tx_queue_depth > 0, ESP_ERR_INVALID_ARG, TAG, "tx_queue_depth must be > 0");
     ESP_RETURN_ON_FALSE(s_node == NULL,  ESP_ERR_INVALID_STATE, TAG, "node already initialized");
 
-    esp_err_t ret = ESP_OK;     // ESP_GOTO_ON_* macros store the error here before jumping to cleanup
+    esp_err_t ret = ESP_OK;     // ESP_GOTO_ON_* macros will store the error here before jumping to cleanup (macros expect variable named ret)
 
     twai_onchip_node_config_t node_cfg =
     {
@@ -169,6 +169,7 @@ esp_err_t CAN_stop(void)
 
 esp_err_t CAN_send(const CAN_frame_t *frame, int timeout_ms)
 {
+    // Initial check for valid inputs and state
     ESP_RETURN_ON_FALSE(frame != NULL, ESP_ERR_INVALID_ARG, TAG, "frame is NULL");
     ESP_RETURN_ON_FALSE(frame->len <= CAN_MAX_DATA_LEN, ESP_ERR_INVALID_ARG, TAG, "len %u > %d", frame->len, CAN_MAX_DATA_LEN);
     ESP_RETURN_ON_FALSE(frame->id <= (frame->extended ? CAN_EXT_ID_MAX : CAN_STD_ID_MAX), ESP_ERR_INVALID_ARG,
