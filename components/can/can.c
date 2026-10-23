@@ -3,6 +3,7 @@
 #include <string.h>
 #include "freertos/FreeRTOS.h"
 #include "freertos/queue.h"
+#include "freertos/task.h"
 #include "esp_check.h"          // ESP_RETURN_ON_FALSE / ESP_RETURN_ON_ERROR
 #include "esp_heap_caps.h"      // heap_caps_calloc
 #include "esp_log.h"            // ESP_LOGI / ESP_LOGE for printing
@@ -31,6 +32,17 @@ static QueueHandle_t s_tx_free = NULL;      // pointers to slots not currently o
 static volatile uint32_t s_tx_success = 0;
 static volatile uint32_t s_tx_failed = 0;
 
+// Receive task settings
+#define CAN_RX_TASK_STACK       4096    // bytes; handlers called from this task (step 4) run on this stack
+#define CAN_RX_TASK_PRIORITY    10      // above app_main (1) so incoming frames are handled promptly
+
+static QueueHandle_t s_rx_queue = NULL;     // received CAN_frame_t copies, ISR -> rx task
+static TaskHandle_t s_rx_task = NULL;
+
+// written from the RX done interrupt, read from tasks
+static volatile uint32_t s_rx_received = 0;
+static volatile uint32_t s_rx_dropped = 0;
+
 // Runs in interrupt context when the hardware finishes with a frame (sent or given up).
 // Must be short and non-blocking: count the result and hand the slot back to the free list.
 static bool on_tx_done(twai_node_handle_t handle, const twai_tx_done_event_data_t *edata, void *user_ctx)
@@ -45,6 +57,66 @@ static bool on_tx_done(twai_node_handle_t handle, const twai_tx_done_event_data_
     BaseType_t task_woken = pdFALSE;
     xQueueSendFromISR(s_tx_free, &slot, &task_woken);
     return task_woken == pdTRUE;    // tells the driver to switch to a task waiting for a free slot
+}
+
+// Runs in interrupt context when the hardware has received a frame.
+// Must be short and non-blocking: copy the frame out of the driver and queue it for the rx task.
+static bool on_rx_done(twai_node_handle_t handle, const twai_rx_done_event_data_t *edata, void *user_ctx)
+{
+    CAN_frame_t frame = {0};
+
+    // the driver writes the payload straight into frame.data
+    twai_frame_t rx = {
+        .buffer = frame.data,
+        .buffer_len = sizeof(frame.data),
+    };
+    if (twai_node_receive_from_isr(handle, &rx) != ESP_OK) {
+        return false;
+    }
+
+    // remote frames carry no data and aren't supported (the S3 can't filter them in hardware)
+    if (rx.header.rtr) {
+        return false;
+    }
+
+    frame.id = rx.header.id;
+    frame.extended = rx.header.ide;
+    // classic CAN: a DLC of 9-15 still means 8 bytes
+    frame.len = (rx.header.dlc > CAN_MAX_DATA_LEN) ? CAN_MAX_DATA_LEN : rx.header.dlc;
+
+    // the queue copies the whole frame, so the local variable can go away after this
+    BaseType_t task_woken = pdFALSE;
+    if (xQueueSendFromISR(s_rx_queue, &frame, &task_woken) == pdTRUE) {
+        s_rx_received++;
+    } else {
+        s_rx_dropped++;     // rx task is falling behind
+    }
+    return task_woken == pdTRUE;    // tells the driver to switch to the rx task right away
+}
+
+// Waits for received frames and processes them in task context, where blocking and printing are allowed.
+static void rx_task(void *arg)
+{
+    CAN_frame_t frame;
+    while (1) {
+        if (xQueueReceive(s_rx_queue, &frame, portMAX_DELAY) == pdTRUE) {
+            // TODO step 4: replace with dispatching to registered handlers
+            ESP_LOGI(TAG, "rx id=0x%03lx%s len=%u", frame.id, frame.extended ? " (ext)" : "", frame.len);
+            ESP_LOG_BUFFER_HEX(TAG, frame.data, frame.len);
+        }
+    }
+}
+
+static void rx_free(void)
+{
+    if (s_rx_task != NULL) {
+        vTaskDelete(s_rx_task);
+        s_rx_task = NULL;
+    }
+    if (s_rx_queue != NULL) {
+        vQueueDelete(s_rx_queue);
+        s_rx_queue = NULL;
+    }
 }
 
 // Mark every slot as free. Only safe while the node is disabled (no interrupts using the slots).
@@ -73,6 +145,7 @@ esp_err_t CAN_init(const CAN_config_t *config)
     ESP_RETURN_ON_FALSE(config != NULL, ESP_ERR_INVALID_ARG, TAG, "config is NULL");
     ESP_RETURN_ON_FALSE(config->bitrate > 0, ESP_ERR_INVALID_ARG, TAG, "bitrate must be > 0");
     ESP_RETURN_ON_FALSE(config->tx_queue_depth > 0, ESP_ERR_INVALID_ARG, TAG, "tx_queue_depth must be > 0");
+    ESP_RETURN_ON_FALSE(config->rx_queue_depth > 0, ESP_ERR_INVALID_ARG, TAG, "rx_queue_depth must be > 0");
     ESP_RETURN_ON_FALSE(s_node == NULL,  ESP_ERR_INVALID_STATE, TAG, "node already initialized");
 
     esp_err_t ret = ESP_OK;     // ESP_GOTO_ON_* macros will store the error here before jumping to cleanup (macros expect variable named ret)
@@ -99,17 +172,26 @@ esp_err_t CAN_init(const CAN_config_t *config)
     ESP_GOTO_ON_FALSE(s_tx_free != NULL, ESP_ERR_NO_MEM, cleanup, TAG, "no memory for tx free list");
     tx_pool_reset();
 
+    // received frames are copied whole into this queue, so it holds CAN_frame_t, not pointers
+    s_rx_queue = xQueueCreate(config->rx_queue_depth, sizeof(CAN_frame_t));
+    ESP_GOTO_ON_FALSE(s_rx_queue != NULL, ESP_ERR_NO_MEM, cleanup, TAG, "no memory for rx queue");
+    ESP_GOTO_ON_FALSE(xTaskCreate(rx_task, "can_rx", CAN_RX_TASK_STACK, NULL, CAN_RX_TASK_PRIORITY, &s_rx_task) == pdPASS,
+                      ESP_ERR_NO_MEM, cleanup, TAG, "failed to create rx task");
+
     // driver copies node_cfg and writes the new handle into s_node
     ESP_GOTO_ON_ERROR(twai_new_node_onchip(&node_cfg, &s_node), cleanup, TAG, "failed to create node");
 
     // callbacks can only be registered while the node is disabled
     twai_event_callbacks_t cbs = {
         .on_tx_done = on_tx_done,
+        .on_rx_done = on_rx_done,
     };
     ESP_GOTO_ON_ERROR(twai_node_register_event_callbacks(s_node, &cbs, NULL), cleanup, TAG, "failed to register callbacks");
 
     s_tx_success = 0;
     s_tx_failed = 0;
+    s_rx_received = 0;
+    s_rx_dropped = 0;
 
     ESP_LOGI(TAG, "initialized: tx=%d rx=%d bitrate=%lu%s",
              config->tx_gpio, config->rx_gpio, config->bitrate,
@@ -122,6 +204,7 @@ cleanup:
         twai_node_delete(s_node);
         s_node = NULL;
     }
+    rx_free();
     tx_pool_free();
     return ret;
 }
@@ -133,6 +216,8 @@ esp_err_t CAN_deinit(void)
 
     ESP_RETURN_ON_ERROR(twai_node_delete(s_node), TAG, "delete failed");
     s_node = NULL;
+    // node is gone, so no more interrupts can touch the queues
+    rx_free();
     tx_pool_free();
 
     ESP_LOGI(TAG, "deinitialized");
@@ -209,5 +294,7 @@ esp_err_t CAN_get_stats(CAN_stats_t *stats)
 
     stats->tx_success = s_tx_success;
     stats->tx_failed = s_tx_failed;
+    stats->rx_received = s_rx_received;
+    stats->rx_dropped = s_rx_dropped;
     return ESP_OK;
 }

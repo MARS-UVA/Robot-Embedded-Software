@@ -20,7 +20,8 @@ void app_main(void)
         .rx_gpio = CAN_RX_GPIO,
         .bitrate = CAN_BITRATE,
         .tx_queue_depth = 10,
-        .self_test = false,      // test without ACK
+        .rx_queue_depth = 10,
+        .self_test = true,      // single board: receive our own frames, no ACK or transceiver needed
     };
 
     ESP_ERROR_CHECK(CAN_init(&can_cfg));
@@ -44,8 +45,9 @@ void app_main(void)
         // Log results for debug
         CAN_stats_t stats;
         CAN_get_stats(&stats);
-        ESP_LOGI(TAG, "sent #%lu: %s | tx ok=%lu failed=%lu",
-                 counter, esp_err_to_name(err), stats.tx_success, stats.tx_failed);
+        ESP_LOGI(TAG, "sent #%lu: %s | tx ok=%lu failed=%lu | rx=%lu dropped=%lu",
+                 counter, esp_err_to_name(err), stats.tx_success, stats.tx_failed,
+                 stats.rx_received, stats.rx_dropped);
         counter++;
     }
 }

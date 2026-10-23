@@ -9,6 +9,7 @@ typedef struct {
     int         rx_gpio;
     uint32_t    bitrate;
     uint32_t    tx_queue_depth;
+    uint32_t    rx_queue_depth;     // received frames that can wait to be processed
     bool        self_test;          // test without ACK
 } CAN_config_t;
 
@@ -27,6 +28,8 @@ typedef struct {
 typedef struct {
     uint32_t    tx_success;         // frames sent and acknowledged
     uint32_t    tx_failed;          // frames the hardware gave up on
+    uint32_t    rx_received;        // frames received and queued for processing
+    uint32_t    rx_dropped;         // frames lost because the rx queue was full
 } CAN_stats_t;
 
 /**
@@ -34,13 +37,15 @@ typedef struct {
  *
  * @note The node stays idle (not on the bus) until CAN_start() is called
  *
- * @param config Pins, bitrate, TX queue depth and self-test flag for the node
+ * @note Received frames are processed by a background task created here
+ *
+ * @param config Pins, bitrate, TX/RX queue depths and self-test flag for the node
  *
  * @return
  *      - ESP_OK: Success
- *      - ESP_ERR_INVALID_ARG: config is NULL, bitrate or tx_queue_depth is 0, or the driver rejected a setting (e.g. invalid pin)
+ *      - ESP_ERR_INVALID_ARG: config is NULL, bitrate, tx_queue_depth or rx_queue_depth is 0, or the driver rejected a setting (e.g. invalid pin)
  *      - ESP_ERR_INVALID_STATE: Node already initialized
- *      - ESP_ERR_NO_MEM: Not enough memory to create the node
+ *      - ESP_ERR_NO_MEM: Not enough memory to create the node, queues or rx task
  *      - ESP_ERR_NOT_FOUND: No free TWAI controller
  */
 esp_err_t CAN_init(const CAN_config_t *config);
@@ -94,7 +99,7 @@ esp_err_t CAN_stop(void);
 esp_err_t CAN_send(const CAN_frame_t *frame, int timeout_ms);
 
 /**
- * @brief Read the transmit counters since CAN_init()
+ * @brief Read the transmit and receive counters since CAN_init()
  *
  * @param stats Filled with the current counts
  *
