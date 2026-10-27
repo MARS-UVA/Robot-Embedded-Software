@@ -1,5 +1,5 @@
 {
-    "cmake.sourceDirectory": "C:/Users/levyq/OneDrive/Desktop/MARS/Robot-Embedded-Software/urc main body",
+    "cmake.sourceDirectory": "C:/Users/levyq/OneDrive/Desktop/MARS/Robot-Embedded-Software/urc_main_body/main",
     "idf.currentSetup": "C:\\esp\\v6.1\\esp-idf",
     "idf.openOcdConfigs": [
         "board/esp32s3-builtin.cfg"

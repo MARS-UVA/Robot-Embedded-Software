@@ -7,9 +7,13 @@
 // Placeholder pins until the transceiver wiring is decided
 #define CAN_TX_GPIO     4
 #define CAN_RX_GPIO     5
-#define CAN_BITRATE     500000
+#define CAN_BITRATE     500000      // must match every other node on the bus
 
-#define TEST_FRAME_ID   0x100
+// true = single board loopback, false = real bus with another node
+#define CAN_SELF_TEST   false
+
+// each board sends on its own ID, two nodes must never send the same ID
+#define TEST_FRAME_ID   0x100       // can_test_node uses 0x101
 
 static const char *TAG = "main";
 
@@ -17,17 +21,17 @@ void app_main(void)
 {
     CAN_config_t can_cfg = {
         .tx_gpio = CAN_TX_GPIO,
-        .rx_gpio = CAN_RX_GPIO,
+        .rx_gpio = CAN_SELF_TEST ? CAN_TX_GPIO : CAN_RX_GPIO,
         .bitrate = CAN_BITRATE,
         .tx_queue_depth = 10,
         .rx_queue_depth = 10,
-        .self_test = true,      // single board: receive our own frames, no ACK or transceiver needed
+        .self_test = CAN_SELF_TEST,
     };
 
     ESP_ERROR_CHECK(CAN_init(&can_cfg));
     ESP_ERROR_CHECK(CAN_start());
 
-    // send a counter once a second
+    // send a counter once a second, frames from the other board are printed by the CAN rx task
     CAN_frame_t frame = {
         .id = TEST_FRAME_ID,
         .extended = false,

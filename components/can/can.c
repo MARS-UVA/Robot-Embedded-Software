@@ -70,11 +70,14 @@ static bool on_rx_done(twai_node_handle_t handle, const twai_rx_done_event_data_
         .buffer = frame.data,
         .buffer_len = sizeof(frame.data),
     };
+
+    // Note: if it fails, could it still leave the frame in the driver queue?
     if (twai_node_receive_from_isr(handle, &rx) != ESP_OK) {
         return false;
     }
 
     // remote frames carry no data and aren't supported (the S3 can't filter them in hardware)
+    // NOTE: this doesn't actually remove the faulty frame from the driver queue, meaning multiple frames could clog up the queue.
     if (rx.header.rtr) {
         return false;
     }
