@@ -1,0 +1,5 @@
+"-specs=C:/Users/hairy/MARS/Robot-Embedded-Software/urc_main_body/build/bootloader/specs/picolibc.specs"
+-mlongcalls
+-fno-builtin-memcpy
+-fno-builtin-memset
+-fno-builtin-bzero
