@@ -25,8 +25,8 @@ static void on_test_node_counter(const CAN_frame_t *frame, void *ctx)
 
     uint32_t value = 0;
     // use memcpy with size included or else dangerous :)
-    memcpy(&value, frame-data, sizeof(value));
-    ESP_LOGI(TAG, "counter from 0x%031x: %lu", frane->id, value);
+    memcpy(&value, frame->data, sizeof(value));
+    ESP_LOGI(TAG, "counter from 0x%03lx: %lu", frame->id, value);
 }
 
 void app_main(void)

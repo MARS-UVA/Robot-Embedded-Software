@@ -229,6 +229,7 @@ esp_err_t CAN_init(const CAN_config_t *config)
     s_tx_failed = 0;
     s_rx_received = 0;
     s_rx_dropped = 0;
+    s_handler_count = 0;
 
     ESP_LOGI(TAG, "initialized: tx=%d rx=%d bitrate=%lu%s",
              config->tx_gpio, config->rx_gpio, config->bitrate,
@@ -253,9 +254,10 @@ esp_err_t CAN_deinit(void)
 
     ESP_RETURN_ON_ERROR(twai_node_delete(s_node), TAG, "delete failed");
     s_node = NULL;
-    // node is gone, so no more interrupts can touch the queues
+    // node is gone, so no more interrupts can touch the queues now
     rx_free();
     tx_pool_free();
+    s_handler_count = 0;
 
     ESP_LOGI(TAG, "deinitialized");
     return ESP_OK;
@@ -356,5 +358,6 @@ esp_err_t CAN_get_stats(CAN_stats_t *stats)
     stats->tx_failed = s_tx_failed;
     stats->rx_received = s_rx_received;
     stats->rx_dropped = s_rx_dropped;
+    stats->rx_unhandled = s_rx_unhandled;
     return ESP_OK;
 }

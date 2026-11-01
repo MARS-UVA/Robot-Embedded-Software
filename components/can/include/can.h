@@ -1,14 +1,15 @@
 //allows file to be included only once
 #pragma once
 #include <stdint.h>
-#include <stdbool.h>    // bool types
-#include <esp_err.h>    // provides error types
+#include <stdbool.h>        // bool types
+#include <esp_err.h>        // provides error types
+#include "hal/gpio_types.h" // gives gpio_num_t
 
 typedef struct {
-    int         tx_gpio;
-    int         rx_gpio;
-    uint32_t    bitrate;
-    uint32_t    tx_queue_depth;
+    gpio_num_t  tx_gpio;            // TX GPIO Pin for CAN transciever
+    gpio_num_t  rx_gpio;            // RX GPIO Pin for CAN transciever
+    uint32_t    bitrate;            // agreed upon speed for CAN communication between devices on shared bus
+    uint32_t    tx_queue_depth;     // How deep you want a given transmission queue to be (how much space for queue)
     uint32_t    rx_queue_depth;     // received frames that can wait to be processed
     bool        self_test;          // test without ACK
 } CAN_config_t;
