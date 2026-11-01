@@ -43,6 +43,23 @@ static TaskHandle_t s_rx_task = NULL;
 static volatile uint32_t s_rx_received = 0;
 static volatile uint32_t s_rx_dropped = 0;
 
+// One registration from CAN_register_handler()
+typedef struct {
+    uint32_t      id;
+    uint32_t      mask;
+    bool          extended;
+    CAN_handler_t handler;
+    void         *ctx;
+} handler_entry_t;
+
+// Only modified before CAN_start(), so rx_task can read it without locking
+// This is where all the CAN handler functions will set and handled at runtime
+static handler_entry_t s_handlers[CAN_MAX_HANDLERS];
+static uint32_t s_handler_count = 0; // keeps track of how many can handlers there are
+
+// written only by rx_task, read from other tasks
+static volatile uint32_t s_rx_unhandled = 0;
+
 // Runs in interrupt context when the hardware finishes with a frame (sent or given up).
 // Must be short and non-blocking: count the result and hand the slot back to the free list.
 static bool on_tx_done(twai_node_handle_t handle, const twai_tx_done_event_data_t *edata, void *user_ctx)
@@ -103,9 +120,26 @@ static void rx_task(void *arg)
     CAN_frame_t frame;
     while (1) {
         if (xQueueReceive(s_rx_queue, &frame, portMAX_DELAY) == pdTRUE) {
-            // TODO step 4: replace with dispatching to registered handlers
-            ESP_LOGI(TAG, "rx id=0x%03lx%s len=%u", frame.id, frame.extended ? " (ext)" : "", frame.len);
-            ESP_LOG_BUFFER_HEX(TAG, frame.data, frame.len);
+            // // TODO step 4: replace with dispatching to registered handlers
+            // ESP_LOGI(TAG, "rx id=0x%03lx%s len=%u", frame.id, frame.extended ? " (ext)" : "", frame.len);
+            // ESP_LOG_BUFFER_HEX(TAG, frame.data, frame.len);
+            //  Replaced the frame recieve logging messages with handlers
+            bool handled = false;
+
+            // deliver to each handler whose id/mask combo matches the frame recieved
+            for (uint32_t i = 0; i < s_handler_count; i++) {
+                const handler_entry_t *h = &s_handlers[i];
+                if (h->extended == frame.extended && (frame.id & h->mask) == h->id) {
+                    h->handler(&frame, h->ctx);
+                    handled = true;
+                }
+            }
+
+            if (!handled) {
+                // I keep track of unmatched frames (idk if we care about this)
+                s_rx_unhandled++;
+                ESP_LOGD(TAG, "unhandled rx id=0x%03lx", frame.id);
+            }
         }
     }
 }
@@ -289,6 +323,29 @@ esp_err_t CAN_send(const CAN_frame_t *frame, int timeout_ms)
         ESP_LOGE(TAG, "transmit failed: %s", esp_err_to_name(ret));
     }
     return ret;
+}
+
+esp_err_t CAN_register_handler(uint32_t id, uint32_t mask, bool extended, CAN_handler_t handler, void *ctx)
+{
+    uint32_t id_max = extended ? CAN_EXT_ID_MAX : CAN_STD_ID_MAX;
+
+    ESP_RETURN_ON_FALSE(handler != NULL, ESP_ERR_INVALID_ARG, TAG, "handler is NULL");
+    ESP_RETURN_ON_FALSE(id <= id_max && mask <= id_max, ESP_ERR_INVALID_ARG, TAG, "id/mask too large");
+    // a bit set in id but not in mask can never match, almost certainly a mistake
+    ESP_RETURN_ON_FALSE((id & ~mask) == 0, ESP_ERR_INVALID_ARG, TAG, "id 0x%lx has bits outside mask 0x%lx", id, mask);
+    ESP_RETURN_ON_FALSE(s_node != NULL, ESP_ERR_INVALID_STATE, TAG, "is not initialized");
+    ESP_RETURN_ON_FALSE(!s_started, ESP_ERR_INVALID_STATE, TAG, "register handlers before CAN_start()");
+    ESP_RETURN_ON_FALSE(s_handler_count < CAN_MAX_HANDLERS, ESP_ERR_NO_MEM, TAG, "handler table full");
+
+    s_handlers[s_handler_count] = (handler_entry_t) {
+        .id = id,
+        .mask = mask,
+        .extended = extended,
+        .handler = handler,
+        .ctx = ctx,
+    };
+    s_handler_count++;
+    return ESP_OK;
 }
 
 esp_err_t CAN_get_stats(CAN_stats_t *stats)

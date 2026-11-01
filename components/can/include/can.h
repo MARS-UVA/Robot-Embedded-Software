@@ -25,11 +25,26 @@ typedef struct {
     uint8_t     data[CAN_MAX_DATA_LEN];
 } CAN_frame_t;
 
+#define CAN_MAX_HANDLERS 16     // max number of CAN_register_handler() calls
+
+// NOTE: refactor this, I think using this structure is inherently confusing to utilized (like its hard to read this)
+/**
+ * @brief Function called when a received frame matches a registered ID/mask
+ *
+ * @note Runs in the CAN rx task, not an interrupt, so it may log or send.
+ *       Keep it short: every other frame waits until it returns.
+ *
+ * @param frame The received frame. Only valid during the call; copy it to keep it.
+ * @param ctx   The pointer passed to CAN_register_handler()
+ */
+typedef void (*CAN_handler_t)(const CAN_frame_t *frame, void *ctx);
+
 typedef struct {
     uint32_t    tx_success;         // frames sent and acknowledged
     uint32_t    tx_failed;          // frames the hardware gave up on
     uint32_t    rx_received;        // frames received and queued for processing
     uint32_t    rx_dropped;         // frames lost because the rx queue was full
+    uint32_t    rx_unhandled;       // frames received that no handler had mactched
 } CAN_stats_t;
 
 /**
@@ -97,6 +112,26 @@ esp_err_t CAN_stop(void);
  *      - ESP_ERR_TIMEOUT: Transmit queue still full after timeout_ms
  */
 esp_err_t CAN_send(const CAN_frame_t *frame, int timeout_ms);
+
+/**
+ * @brief Register a function to receive frames whose ID matches (frame_id & mask) == id
+ *
+ * @note Must be called after CAN_init() and before CAN_start().
+ *       A frame is delivered to every matching handler.
+ *
+ * @param id       ID bits that must match
+ * @param mask     Which ID bits to compare: 1 = must match, 0 = don't care
+ * @param extended true to match 29-bit IDs, false for 11-bit
+ * @param handler  Function to call
+ * @param ctx      Passed unchanged to handler (may be NULL)
+ *
+ * @return
+ *      - ESP_OK: Success
+ *      - ESP_ERR_INVALID_ARG: handler is NULL, id/mask too large, or id has bits outside mask
+ *      - ESP_ERR_INVALID_STATE: Node not initialized, or already started
+ *      - ESP_ERR_NO_MEM: Handler table full (CAN_MAX_HANDLERS)
+ */
+esp_err_t CAN_register_handler(uint32_t id, uint32_t mask, bool extended, CAN_handler_t handler, void *ctx);
 
 /**
  * @brief Read the transmit and receive counters since CAN_init()
