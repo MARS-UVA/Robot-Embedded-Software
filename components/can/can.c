@@ -1,5 +1,5 @@
 #include "can.h"
-#include <stdlib.h>
+// #include <stdlib.h>
 #include <string.h>
 #include "freertos/FreeRTOS.h"
 #include "freertos/queue.h"
@@ -24,7 +24,9 @@ typedef struct {
     uint8_t      data[CAN_MAX_DATA_LEN];    // actual data buffer
 } tx_slot_t;
 
-static tx_slot_t *s_tx_slots = NULL;        // pool of transmit buffers
+static tx_slot_t s_tx_slots[CAN_TX_QUEUE_MAX + 1];                               // frame slots
+static StaticQueue_t s_tx_free_buf;                                             // queue's book keeping
+static uint8_t s_tx_free_storage[(CAN_TX_QUEUE_MAX + 1) * sizeof(tx_slot_t *)]; // queue's item storage
 static uint32_t s_tx_slot_count = 0;
 static QueueHandle_t s_tx_free = NULL;      // pointers to slots not currently owned by the driver
 
@@ -172,8 +174,6 @@ static void tx_pool_free(void)
         vQueueDelete(s_tx_free);
         s_tx_free = NULL;
     }
-    free(s_tx_slots); // Note: MAKE SURE THIS IS ONLY CALLED WHEN DENIT CAN
-    s_tx_slots = NULL;
     s_tx_slot_count = 0;
 }
 
@@ -182,6 +182,7 @@ esp_err_t CAN_init(const CAN_config_t *config)
     ESP_RETURN_ON_FALSE(config != NULL, ESP_ERR_INVALID_ARG, TAG, "config is NULL");
     ESP_RETURN_ON_FALSE(config->bitrate > 0, ESP_ERR_INVALID_ARG, TAG, "bitrate must be > 0");
     ESP_RETURN_ON_FALSE(config->tx_queue_depth > 0, ESP_ERR_INVALID_ARG, TAG, "tx_queue_depth must be > 0");
+    ESP_RETURN_ON_FALSE(config->tx_queue_depth <= CAN_TX_QUEUE_MAX, ESP_ERR_INVALID_ARG, TAG, "tx_queue_depth must be <= %d", CAN_TX_QUEUE_MAX);
     ESP_RETURN_ON_FALSE(config->rx_queue_depth > 0, ESP_ERR_INVALID_ARG, TAG, "rx_queue_depth must be > 0");
     ESP_RETURN_ON_FALSE(s_node == NULL,  ESP_ERR_INVALID_STATE, TAG, "node already initialized");
 
@@ -202,11 +203,8 @@ esp_err_t CAN_init(const CAN_config_t *config)
 
     // one slot per driver queue entry, plus one for the frame currently in the hardware
     s_tx_slot_count = config->tx_queue_depth + 1;
-    // internal RAM, since the interrupt reads these buffers
-    s_tx_slots = heap_caps_calloc(s_tx_slot_count, sizeof(tx_slot_t), MALLOC_CAP_INTERNAL | MALLOC_CAP_8BIT);
-    ESP_GOTO_ON_FALSE(s_tx_slots != NULL, ESP_ERR_NO_MEM, cleanup, TAG, "no memory for tx slots");
-    s_tx_free = xQueueCreate(s_tx_slot_count, sizeof(tx_slot_t *));
-    ESP_GOTO_ON_FALSE(s_tx_free != NULL, ESP_ERR_NO_MEM, cleanup, TAG, "no memory for tx free list");
+    s_tx_free = xQueueCreateStatic(s_tx_slot_count, sizeof(tx_slot_t *), s_tx_free_storage, &s_tx_free_buf);
+    ESP_GOTO_ON_FALSE(s_tx_free != NULL, ESP_ERR_NO_MEM, cleanup, TAG, "failed to create tx free list");
     tx_pool_reset();
 
     // received frames are copied whole into this queue, so it holds CAN_frame_t, not pointers
@@ -229,7 +227,7 @@ esp_err_t CAN_init(const CAN_config_t *config)
     s_tx_failed = 0;
     s_rx_received = 0;
     s_rx_dropped = 0;
-    s_handler_count = 0;
+    s_rx_unhandled = 0;
 
     ESP_LOGI(TAG, "initialized: tx=%d rx=%d bitrate=%lu%s",
              config->tx_gpio, config->rx_gpio, config->bitrate,

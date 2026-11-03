@@ -14,10 +14,10 @@ typedef struct {
     bool        self_test;          // test without ACK
 } CAN_config_t;
 
-
-#define CAN_MAX_DATA_LEN 8              // maximum number bytes a frame can hold
-#define CAN_STD_ID_MAX   0x7FF          // largest 11-bit standard ID
-#define CAN_EXT_ID_MAX   0x1FFFFFFF     // largest 29-bit extended ID
+#define CAN_TX_QUEUE_MAX    16          // largest allowed tx_queue_depth
+#define CAN_MAX_DATA_LEN    8           // maximum number bytes a frame can hold
+#define CAN_STD_ID_MAX      0x7FF       // largest 11-bit standard ID
+#define CAN_EXT_ID_MAX      0x1FFFFFFF  // largest 29-bit extended ID
 
 typedef struct {
     uint32_t    id;
@@ -144,7 +144,3 @@ esp_err_t CAN_register_handler(uint32_t id, uint32_t mask, bool extended, CAN_ha
  *      - ESP_ERR_INVALID_ARG: stats is NULL
  */
 esp_err_t CAN_get_stats(CAN_stats_t *stats);
-
-
-//static IRAM_ATTR bool twai_sender_tx_done_callback(twai_node_handle_t handle, const twai_tx_done_event_data_t *edata, void *user_ctx);
-//static IRAM_ATTR bool twai_sender_on_error_callback(twai_node_handle_t handle, const twai_error_event_data_t *edata, void *user_ctx);
