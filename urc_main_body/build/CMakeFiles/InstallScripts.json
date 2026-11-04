@@ -170,7 +170,12 @@
 		"C:/Users/hairy/MARS/Robot-Embedded-Software/urc_main_body/build/esp-idf/rt/cmake_install.cmake",
 		"C:/Users/hairy/MARS/Robot-Embedded-Software/urc_main_body/build/esp-idf/spiffs/cmake_install.cmake",
 		"C:/Users/hairy/MARS/Robot-Embedded-Software/urc_main_body/build/esp-idf/ulp/cmake_install.cmake",
-		"C:/Users/hairy/MARS/Robot-Embedded-Software/urc_main_body/build/esp-idf/main/cmake_install.cmake"
+		"C:/Users/hairy/MARS/Robot-Embedded-Software/urc_main_body/build/esp-idf/espressif__cmake_utilities/cmake_install.cmake",
+		"C:/Users/hairy/MARS/Robot-Embedded-Software/urc_main_body/build/esp-idf/espressif__i2c_bus/cmake_install.cmake",
+		"C:/Users/hairy/MARS/Robot-Embedded-Software/urc_main_body/build/esp-idf/espressif__bme280/cmake_install.cmake",
+		"C:/Users/hairy/MARS/Robot-Embedded-Software/urc_main_body/build/esp-idf/BME280_Sensor/cmake_install.cmake",
+		"C:/Users/hairy/MARS/Robot-Embedded-Software/urc_main_body/build/esp-idf/main/cmake_install.cmake",
+		"C:/Users/hairy/MARS/Robot-Embedded-Software/urc_main_body/build/esp-idf/can/cmake_install.cmake"
 	],
 	"Parallel" : false
 }

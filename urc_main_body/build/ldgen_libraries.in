@@ -206,4 +206,12 @@ $<TARGET_FILE:__idf_esp_driver_sdspi>
 $<TARGET_FILE:idf::perfmon>
 $<TARGET_FILE:idf::rt>
 $<TARGET_FILE:idf::spiffs>
+$<TARGET_FILE:idf::espressif__i2c_bus>
+$<TARGET_FILE:__idf_driver>
+$<TARGET_FILE:idf::espressif__bme280>
+$<TARGET_FILE:__idf_espressif__i2c_bus>
+$<TARGET_FILE:idf::BME280_Sensor>
+$<TARGET_FILE:__idf_espressif__bme280>
 $<TARGET_FILE:idf::main>
+$<TARGET_FILE:__idf_BME280_Sensor>
+$<TARGET_FILE:idf::can>

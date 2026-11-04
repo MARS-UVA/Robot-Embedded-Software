@@ -17,4 +17,4 @@ set confirm off
 set confirm on
 
 # Load application symbols
-file C:/Users/hairy/MARS/Robot-Embedded-Software/urc_main_body/build/URC.elf
+file C:/Users/hairy/MARS/Robot-Embedded-Software/urc_main_body/build/urc_main_body.elf

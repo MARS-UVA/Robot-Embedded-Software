@@ -163,7 +163,7 @@ CMAKE_INSTALL_MANDIR:PATH=
 CMAKE_INSTALL_OLDINCLUDEDIR:PATH=/usr/include
 
 //Install path prefix, prepended onto install directories.
-CMAKE_INSTALL_PREFIX:PATH=C:/Program Files (x86)/URC
+CMAKE_INSTALL_PREFIX:PATH=C:/Program Files (x86)/urc_main_body
 
 //Run-time variable data (LOCALSTATEDIR/run)
 CMAKE_INSTALL_RUNSTATEDIR:PATH=
@@ -219,7 +219,7 @@ CMAKE_PROJECT_DESCRIPTION:STATIC=
 CMAKE_PROJECT_HOMEPAGE_URL:STATIC=
 
 //Value Computed by CMake
-CMAKE_PROJECT_NAME:STATIC=URC
+CMAKE_PROJECT_NAME:STATIC=urc_main_body
 
 //Value Computed by CMake
 CMAKE_PROJECT_VERSION:STATIC=4.1.0
@@ -397,15 +397,6 @@ TF_PSA_CRYPTO_TEST_DRIVER:BOOL=OFF
 //Path to the PSA Crypto configuration file
 TF_PSA_CRYPTO_USER_CONFIG_FILE:STRING=mbedtls/esp_config.h
 
-//Value Computed by CMake
-URC_BINARY_DIR:STATIC=C:/Users/hairy/MARS/Robot-Embedded-Software/urc_main_body/build
-
-//Value Computed by CMake
-URC_IS_TOP_LEVEL:STATIC=ON
-
-//Value Computed by CMake
-URC_SOURCE_DIR:STATIC=C:/Users/hairy/MARS/Robot-Embedded-Software/urc_main_body
-
 //Build Mbed TLS shared library.
 USE_SHARED_MBEDTLS_LIBRARY:BOOL=OFF
 
@@ -453,6 +444,15 @@ pqcp_LIB_DEPENDS:STATIC=general;__idf_cxx;general;__idf_esp_libc;general;__idf_f
 
 //Dependencies for the target
 tfpsacrypto_LIB_DEPENDS:STATIC=general;__idf_cxx;general;__idf_esp_libc;general;__idf_freertos;general;__idf_esp_hw_support;general;__idf_heap;general;__idf_log;general;__idf_soc;general;__idf_hal;general;__idf_esp_rom;general;__idf_esp_common;general;__idf_esp_system;general;__idf_esp_stdio;general;__idf_xtensa;general;__idf_nvs_flash;general;idf::esp_security;general;idf::esp_driver_dma;general;idf::esp_mm;general;idf::efuse;general;idf::efuse;
+
+//Value Computed by CMake
+urc_main_body_BINARY_DIR:STATIC=C:/Users/hairy/MARS/Robot-Embedded-Software/urc_main_body/build
+
+//Value Computed by CMake
+urc_main_body_IS_TOP_LEVEL:STATIC=ON
+
+//Value Computed by CMake
+urc_main_body_SOURCE_DIR:STATIC=C:/Users/hairy/MARS/Robot-Embedded-Software/urc_main_body
 
 //Dependencies for the target
 utilities_LIB_DEPENDS:STATIC=general;__idf_cxx;general;__idf_esp_libc;general;__idf_freertos;general;__idf_esp_hw_support;general;__idf_heap;general;__idf_log;general;__idf_soc;general;__idf_hal;general;__idf_esp_rom;general;__idf_esp_common;general;__idf_esp_system;general;__idf_esp_stdio;general;__idf_xtensa;general;idf::esp_security;
@@ -609,7 +609,7 @@ CMAKE_MODULE_LINKER_FLAGS_RELWITHDEBINFO-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_NM
 CMAKE_NM-ADVANCED:INTERNAL=1
 //number of local generators
-CMAKE_NUMBER_OF_MAKEFILES:INTERNAL=170
+CMAKE_NUMBER_OF_MAKEFILES:INTERNAL=175
 //ADVANCED property for variable: CMAKE_OBJCOPY
 CMAKE_OBJCOPY-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_OBJDUMP
@@ -663,7 +663,7 @@ FIND_PACKAGE_MESSAGE_DETAILS_Threads:INTERNAL=[TRUE][v()]
 //ADVANCED property for variable: GIT_EXECUTABLE
 GIT_EXECUTABLE-ADVANCED:INTERNAL=1
 //CMAKE_INSTALL_PREFIX during last run
-_GNUInstallDirs_LAST_CMAKE_INSTALL_PREFIX:INTERNAL=C:/Program Files (x86)/URC
+_GNUInstallDirs_LAST_CMAKE_INSTALL_PREFIX:INTERNAL=C:/Program Files (x86)/urc_main_body
 //Compiler reason failure
 _Python3_Compiler_REASON_FAILURE:INTERNAL=
 //Development reason failure
