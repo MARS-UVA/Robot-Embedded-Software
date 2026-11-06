@@ -17,6 +17,7 @@ static const char *TAG = "CAN";
 static twai_node_handle_t s_node = NULL;
 static bool s_started = false; // node enabled status
 
+// this exists in can.c (not can.h) because this doesnt need to be exposed to user
 // One transmit buffer. The driver keeps a pointer to the frame until it is sent,
 // so the frame must live here instead of on the caller's stack.
 typedef struct {
@@ -35,7 +36,7 @@ static volatile uint32_t s_tx_success = 0;
 static volatile uint32_t s_tx_failed = 0;
 
 // Receive task settings
-#define CAN_RX_TASK_STACK       4096    // bytes; handlers called from this task (step 4) run on this stack
+#define CAN_RX_TASK_STACK       4096    // in bytes; handlers called from this task (step 4) run on this stack
 #define CAN_RX_TASK_PRIORITY    10      // above app_main (1) so incoming frames are handled promptly
 
 static QueueHandle_t s_rx_queue = NULL;     // received CAN_frame_t copies, ISR -> rx task
