@@ -1,0 +1,65 @@
+Command: C:\Espressif\tools\python\v6.1\venv\Scripts\python.exe C:\esp\v6.1\esp-idf\tools/idf_monitor.py -p COM8 -b 115200 --toolchain-prefix xtensa-esp32s3-elf- --target esp32s3 --revision 0 C:\Users\hairy\MARS\Robot-Embedded-Software\urc_main_body\build\urc_main_body.elf C:\Users\hairy\MARS\Robot-Embedded-Software\urc_main_body\build\bootloader\bootloader.elf --force-color -m 'C:\Espressif\tools\python\v6.1\venv\Scripts\python.exe' 'C:\esp\v6.1\esp-idf\tools\idf.py' '-p' 'COM8'
+ESP-ROM:esp32s3-20210327
+Build:Mar 27 2021
+rst:0x15 (USB_UART_CHIP_RESET),boot:0x8 (SPI_FAST_FLASH_BOOT)
+Saved PC:0x40379186
+SPIWP:0xee
+mode:DIO, clock div:1
+load:0x3fce2820,len:0x14f0
+load:0x403c8700,len:0xde4
+load:0x403cb700,len:0x2f58
+entry 0x403c8904
+[0;32mI (24) boot: ESP-IDF v6.1 2nd stage bootloader[0m
+[0;32mI (24) boot: compile time Nov  6 2026 17:58:08[0m
+[0;32mI (25) boot: Multicore bootloader[0m
+[0;32mI (25) boot: chip revision: v0.2[0m
+[0;32mI (27) boot: efuse block revision: v1.3[0m
+[0;32mI (31) boot.esp32s3: Boot SPI Speed : 80MHz[0m
+[0;32mI (35) boot.esp32s3: SPI Mode       : DIO[0m
+[0;32mI (39) boot.esp32s3: SPI Flash Size : 2MB[0m
+[0;32mI (42) boot: Enabling RNG early entropy source...[0m
+[0;32mI (47) boot: Partition Table:[0m
+[0;32mI (49) boot: ## Label            Usage          Type ST Offset   Length[0m
+[0;32mI (56) boot:  0 nvs              WiFi data        01 02 00009000 00006000[0m
+[0;32mI (62) boot:  1 phy_init         RF data          01 01 0000f000 00001000[0m
+[0;32mI (69) boot:  2 factory          factory app      00 00 00010000 00100000[0m
+[0;32mI (75) boot: End of partition table[0m
+[0;32mI (79) esp_image: segment 0: paddr=00010020 vaddr=3c020020 size=0afc8h ( 45000) map[0m
+[0;32mI (94) esp_image: segment 1: paddr=0001aff0 vaddr=3fc90700 size=031d8h ( 12760) load[0m
+[0;32mI (97) esp_image: segment 2: paddr=0001e1d0 vaddr=40374000 size=01e48h (  7752) load[0m
+[0;32mI (103) esp_image: segment 3: paddr=00020020 vaddr=42000020 size=15954h ( 88404) map[0m
+[0;32mI (124) esp_image: segment 4: paddr=0003597c vaddr=40375e48 size=0a860h ( 43104) load[0m
+[0;32mI (135) esp_image: segment 5: paddr=000401e4 vaddr=50000000 size=00024h (    36) load[0m
+[0;32mI (141) boot: Loaded app from partition at offset 0x10000[0m
+[0;32mI (141) boot: Disabling RNG early entropy source...[0m
+[0;32mI (152) cpu_start: Multicore app[0m
+[0;32mI (161) cpu_start: GPIO 44 and 43 are used as console UART I/O pins[0m
+[0;32mI (162) cpu_start: Pro cpu start user code[0m
+[0;32mI (162) cpu_start: cpu freq: 160000000 Hz[0m
+[0;32mI (163) app_init: Application information:[0m
+[0;32mI (167) app_init: Project name:     urc_main_body[0m
+[0;32mI (171) app_init: App version:      7cb2522-dirty[0m
+[0;32mI (176) app_init: Compile time:     Nov  6 2026 17:57:49[0m
+[0;32mI (181) app_init: ELF file SHA256:  10f59dcc1...[0m
+[0;32mI (185) app_init: ESP-IDF:          v6.1[0m
+[0;32mI (189) efuse_init: Min chip rev:     v0.0[0m
+[0;32mI (193) efuse_init: Max chip rev:     v0.99 [0m
+[0;32mI (197) efuse_init: Chip rev:         v0.2[0m
+[0;32mI (201) heap_init: Initializing. RAM available for dynamic allocation:[0m
+[0;32mI (207) heap_init: At 3FC94350 len 000553C0 (340 KiB): RAM[0m
+[0;32mI (212) heap_init: At 3FCE9710 len 00005724 (21 KiB): RAM[0m
+[0;32mI (217) heap_init: At 3FCF0000 len 00008000 (32 KiB): DRAM[0m
+[0;32mI (222) heap_init: At 600FE000 len 00001FE8 (7 KiB): RTCRAM[0m
+[0;32mI (229) spi_flash: detected chip: generic[0m
+[0;32mI (231) spi_flash: flash io: dio[0m
+[0;33mW (234) spi_flash: Detected size(8192k) larger than the size in the binary image header(2048k). Using the size in the binary image header.[0m
+[0;32mI (247) sleep_gpio: Configure to isolate all GPIO pins in sleep state[0m
+[0;32mI (253) sleep_gpio: Enable automatic switching of GPIO sleep configuration[0m
+[0;32mI (260) main_task: Started on CPU0[0m
+[0;32mI (260) main_task: Calling app_main()[0m
+[0;32mI (270) Main_App: Initializing BME280 sensor via pins SDA: 10, SCL: 11[0m
+[1;31mE (270) i2c_bus: ./managed_components/espressif__i2c_bus/i2c_bus_v2.c:169 (i2c_bus_get_current_clk_speed):i2c_bus has not inited[0m
+[1;31mE (280) i2c_bus: ./managed_components/espressif__i2c_bus/i2c_bus_v2.c:186 (i2c_bus_device_create):i2c_bus has not inited[0m
+[1;31mE (290) BME280_Driver: Failed to allocate Espressif BME280 handle instance. Cleaning up bus.[0m
+[0;32mI (300) main_task: Returned from app_main()[0m
+[1;31mE (300) Main_App: Sensor initialization failed! Terminating task loop.[0m

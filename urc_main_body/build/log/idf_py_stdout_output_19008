@@ -1,0 +1,244 @@
+Command: C:\Espressif\tools\python\v6.1\venv\Scripts\python.exe C:\esp\v6.1\esp-idf\tools/idf_monitor.py -p COM8 -b 115200 --toolchain-prefix xtensa-esp32s3-elf- --target esp32s3 --revision 0 C:\Users\hairy\MARS\Robot-Embedded-Software\urc_main_body\build\urc_main_body.elf C:\Users\hairy\MARS\Robot-Embedded-Software\urc_main_body\build\bootloader\bootloader.elf --force-color -m 'C:\Espressif\tools\python\v6.1\venv\Scripts\python.exe' 'C:\esp\v6.1\esp-idf\tools\idf.py' '-p' 'COM8'
+[0;32mI (102) esp_image: segment 3: paddr=00020020 vaddr=42000020 sizeESP-ROM:esp32s3-20210327[0m
+Build:Mar 27 2021
+rst:0x15 (USB_UART_CHIP_RESET),boot:0x8 (SPI_FAST_FLASH_BOOT)
+Saved PC:0x40379186
+SPIWP:0xee
+mode:DIO, clock div:1
+load:0x3fce2820,len:0x14f0
+load:0x403c8700,len:0xde4
+load:0x403cb700,len:0x2f58
+entry 0x403c8904
+[0;32mI (24) boot: ESP-IDF v6.1 2nd stage bootloader[0m
+[0;32mI (24) boot: compile time Nov  6 2026 17:58:08[0m
+[0;32mI (25) boot: Multicore bootloader[0m
+[0;32mI (25) boot: chip revision: v0.2[0m
+[0;32mI (27) boot: efuse block revision: v1.3[0m
+[0;32mI (31) boot.esp32s3: Boot SPI Speed : 80MHz[0m
+[0;32mI (35) boot.esp32s3: SPI Mode       : DIO[0m
+[0;32mI (39) boot.esp32s3: SPI Flash Size : 2MB[0m
+[0;32mI (42) boot: Enabling RNG early entropy source...[0m
+[0;32mI (47) boot: Partition Table:[0m
+[0;32mI (49) boot: ## Label            Usage          Type ST Offset   Length[0m
+[0;32mI (56) boot:  0 nvs              WiFi data        01 02 00009000 00006000[0m
+[0;32mI (62) boot:  1 phy_init         RF data          01 01 0000f000 00001000[0m
+[0;32mI (69) boot:  2 factory          factory app      00 00 00010000 00100000[0m
+[0;32mI (75) boot: End of partition table[0m
+[0;32mI (79) esp_image: segment 0: paddr=00010020 vaddr=3c020020 size=0b358h ( 45912) map[0m
+[0;32mI (94) esp_image: segment 1: paddr=0001b380 vaddr=3fc90700 size=031d8h ( 12760) load[0m
+[0;32mI (98) esp_image: segment 2: paddr=0001e560 vaddr=40374000 size=01ab8h (  6840) load[0m
+[0;32mI (102) esp_image: segment 3: paddr=00020020 vaddr=42000020 size=1683ch ( 92220) map[0m
+[0;32mI (125) esp_image: segment 4: paddr=00036864 vaddr=40375ab8 size=0abf0h ( 44016) load[0m
+[0;32mI (136) esp_image: segment 5: paddr=0004145c vaddr=50000000 size=00024h (    36) load[0m
+[0;32mI (142) boot: Loaded app from partition at offset 0x10000[0m
+[0;32mI (142) boot: Disabling RNG early entropy source...[0m
+[0;32mI (153) cpu_start: Multicore app[0m
+[0;32mI (162) cpu_start: GPIO 44 and 43 are used as console UART I/O pins[0m
+[0;32mI (163) cpu_start: Pro cpu start user code[0m
+[0;32mI (163) cpu_start: cpu freq: 160000000 Hz[0m
+[0;32mI (164) app_init: Application information:[0m
+[0;32mI (168) app_init: Project name:     urc_main_body[0m
+[0;32mI (172) app_init: App version:      7cb2522-dirty[0m
+[0;32mI (177) app_init: Compile time:     Nov  6 2026 17:57:49[0m
+[0;32mI (182) app_init: ELF file SHA256:  a318654c4...[0m
+[0;32mI (186) app_init: ESP-IDF:          v6.1[0m
+[0;32mI (190) efuse_init: Min chip rev:     v0.0[0m
+[0;32mI (194) efuse_init: Max chip rev:     v0.99 [0m
+[0;32mI (198) efuse_init: Chip rev:         v0.2[0m
+[0;32mI (201) heap_init: Initializing. RAM available for dynamic allocation:[0m
+[0;32mI (208) heap_init: At 3FC94410 len 00055300 (340 KiB): RAM[0m
+[0;32mI (213) heap_init: At 3FCE9710 len 00005724 (21 KiB): RAM[0m
+[0;32mI (218) heap_init: At 3FCF0000 len 00008000 (32 KiB): DRAM[0m
+[0;32mI (223) heap_init: At 600FE000 len 00001FE8 (7 KiB): RTCRAM[0m
+[0;32mI (230) spi_flash: detected chip: generic[0m
+[0;32mI (232) spi_flash: flash io: dio[0m
+[0;33mW (235) spi_flash: Detected size(8192k) larger than the size in the binary image header(2048k). Using the size in the binary image header.[0m
+[0;32mI (248) sleep_gpio: Configure to isolate all GPIO pins in sleep state[0m
+[0;32mI (254) sleep_gpio: Enable automatic switching of GPIO sleep configuration[0m
+[0;32mI (261) main_task: Started on CPU0[0m
+[0;32mI (261) main_task: Calling app_main()[0m
+[0;32mI (271) Main_App: Initializing BME280 sensor via pins SDA: 10, SCL: 11[0m
+[1;31mE (271) i2c.master: this port has not been initialized, please initialize it first[0m
+[0;32mI (281) i2c_bus: i2c0 bus inited[0m
+[0;32mI (281) i2c_bus: I2C Bus V2 Config Succeed, Version: 1.5.2[0m
+[0;32mI (291) BME280_Driver: I2C bus initialized successfully.[0m
+[0;32mI (291) main_task: Returned from app_main()[0m
+[0;32mI (601) BME280_Driver: BME280 sensor initialized successfully.[0m
+[1;31mE (611) BME280_Driver: Failed to read BME280 sensor data.[0m
+[0;33mW (611) Main_App: Telemetry data invalid or I2C bus failed to respond.[0m
+[0;32mI (2611) Main_App: --- Telemetry Report ---[0m
+[0;32mI (2611) Main_App: Temperature: 23.27 °C[0m
+[0;32mI (2611) Main_App: Humidity:    57.17 %[0m
+[0;32mI (2611) Main_App: Pressure:    9.90 hPa[0m
+[0;32mI (4611) Main_App: --- Telemetry Report ---[0m
+[0;32mI (4611) Main_App: Temperature: 23.27 °C[0m
+[0;32mI (4611) Main_App: Humidity:    57.15 %[0m
+[0;32mI (4611) Main_App: Pressure:    9.90 hPa[0m
+[0;32mI (6611) Main_App: --- Telemetry Report ---[0m
+[0;32mI (6611) Main_App: Temperature: 23.29 °C[0m
+[0;32mI (6611) Main_App: Humidity:    57.78 %[0m
+[0;32mI (6611) Main_App: Pressure:    9.90 hPa[0m
+[0;32mI (8611) Main_App: --- Telemetry Report ---[0m
+[0;32mI (8611) Main_App: Temperature: 23.29 °C[0m
+[0;32mI (8611) Main_App: Humidity:    57.65 %[0m
+[0;32mI (8611) Main_App: Pressure:    9.90 hPa[0m
+[0;32mI (10611) Main_App: --- Telemetry Report ---[0m
+[0;32mI (10611) Main_App: Temperature: 23.28 °C[0m
+[0;32mI (10611) Main_App: Humidity:    57.17 %[0m
+[0;32mI (10611) Main_App: Pressure:    9.90 hPa[0m
+[0;32mI (12611) Main_App: --- Telemetry Report ---[0m
+[0;32mI (12611) Main_App: Temperature: 23.28 °C[0m
+[0;32mI (12611) Main_App: Humidity:    57.57 %[0m
+[0;32mI (12611) Main_App: Pressure:    9.90 hPa[0m
+[0;32mI (14611) Main_App: --- Telemetry Report ---[0m
+[0;32mI (14611) Main_App: Temperature: 23.27 °C[0m
+[0;32mI (14611) Main_App: Humidity:    57.17 %[0m
+[0;32mI (14611) Main_App: Pressure:    9.90 hPa[0m
+[0;32mI (16611) Main_App: --- Telemetry Report ---[0m
+[0;32mI (16611) Main_App: Temperature: 23.28 °C[0m
+[0;32mI (16611) Main_App: Humidity:    56.94 %[0m
+[0;32mI (16611) Main_App: Pressure:    9.90 hPa[0m
+[0;32mI (18611) Main_App: --- Telemetry Report ---[0m
+[0;32mI (18611) Main_App: Temperature: 23.27 °C[0m
+[0;32mI (18611) Main_App: Humidity:    56.88 %[0m
+[0;32mI (18611) Main_App: Pressure:    9.90 hPa[0m
+[0;32mI (20611) Main_App: --- Telemetry Report ---[0m
+[0;32mI (20611) Main_App: Temperature: 23.26 °C[0m
+[0;32mI (20611) Main_App: Humidity:    56.86 %[0m
+[0;32mI (20611) Main_App: Pressure:    9.90 hPa[0m
+[0;32mI (22611) Main_App: --- Telemetry Report ---[0m
+[0;32mI (22611) Main_App: Temperature: 23.26 °C[0m
+[0;32mI (22611) Main_App: Humidity:    56.89 %[0m
+[0;32mI (22611) Main_App: Pressure:    9.90 hPa[0m
+[0;32mI (24611) Main_App: --- Telemetry Report ---[0m
+[0;32mI (24611) Main_App: Temperature: 23.26 °C[0m
+[0;32mI (24611) Main_App: Humidity:    57.15 %[0m
+[0;32mI (24611) Main_App: Pressure:    9.90 hPa[0m
+[0;32mI (26611) Main_App: --- Telemetry Report ---[0m
+[0;32mI (26611) Main_App: Temperature: 23.25 °C[0m
+[0;32mI (26611) Main_App: Humidity:    56.93 %[0m
+[0;32mI (26611) Main_App: Pressure:    9.90 hPa[0m
+[0;32mI (28611) Main_App: --- Telemetry Report ---[0m
+[0;32mI (28611) Main_App: Temperature: 23.24 °C[0m
+[0;32mI (28611) Main_App: Humidity:    56.97 %[0m
+[0;32mI (28611) Main_App: Pressure:    9.90 hPa[0m
+[0;32mI (30611) Main_App: --- Telemetry Report ---[0m
+[0;32mI (30611) Main_App: Temperature: 23.25 °C[0m
+[0;32mI (30611) Main_App: Humidity:    57.04 %[0m
+[0;32mI (30611) Main_App: Pressure:    9.90 hPa[0m
+[0;32mI (32611) Main_App: --- Telemetry Report ---[0m
+[0;32mI (32611) Main_App: Temperature: 23.25 °C[0m
+[0;32mI (32611) Main_App: Humidity:    57.18 %[0m
+[0;32mI (32611) Main_App: Pressure:    9.90 hPa[0m
+[0;32mI (34611) Main_App: --- Telemetry Report ---[0m
+[0;32mI (34611) Main_App: Temperature: 23.26 °C[0m
+[0;32mI (34611) Main_App: Humidity:    58.21 %[0m
+[0;32mI (34611) Main_App: Pressure:    9.90 hPa[0m
+[0;32mI (36611) Main_App: --- Telemetry Report ---[0m
+[0;32mI (36611) Main_App: Temperature: 23.27 °C[0m
+[0;32mI (36611) Main_App: Humidity:    58.41 %[0m
+[0;32mI (36611) Main_App: Pressure:    9.90 hPa[0m
+[0;32mI (38611) Main_App: --- Telemetry Report ---[0m
+[0;32mI (38611) Main_App: Temperature: 23.27 °C[0m
+[0;32mI (38611) Main_App: Humidity:    58.67 %[0m
+[0;32mI (38611) Main_App: Pressure:    9.90 hPa[0m
+[0;32mI (40611) Main_App: --- Telemetry Report ---[0m
+[0;32mI (40611) Main_App: Temperature: 23.27 °C[0m
+[0;32mI (40611) Main_App: Humidity:    57.96 %[0m
+[0;32mI (40611) Main_App: Pressure:    9.90 hPa[0m
+[0;32mI (42611) Main_App: --- Telemetry Report ---[0m
+[0;32mI (42611) Main_App: Temperature: 23.27 °C[0m
+[0;32mI (42611) Main_App: Humidity:    57.33 %[0m
+[0;32mI (42611) Main_App: Pressure:    9.90 hPa[0m
+[0;32mI (44611) Main_App: --- Telemetry Report ---[0m
+[0;32mI (44611) Main_App: Temperature: 23.26 °C[0m
+[0;32mI (44611) Main_App: Humidity:    57.03 %[0m
+[0;32mI (44611) Main_App: Pressure:    9.90 hPa[0m
+[0;32mI (46611) Main_App: --- Telemetry Report ---[0m
+[0;32mI (46611) Main_App: Temperature: 23.27 °C[0m
+[0;32mI (46611) Main_App: Humidity:    56.84 %[0m
+[0;32mI (46611) Main_App: Pressure:    9.90 hPa[0m
+[0;32mI (48611) Main_App: --- Telemetry Report ---[0m
+[0;32mI (48611) Main_App: Temperature: 23.27 °C[0m
+[0;32mI (48611) Main_App: Humidity:    56.73 %[0m
+[0;32mI (48611) Main_App: Pressure:    9.90 hPa[0m
+[0;32mI (50611) Main_App: --- Telemetry Report ---[0m
+[0;32mI (50611) Main_App: Temperature: 23.25 °C[0m
+[0;32mI (50611) Main_App: Humidity:    56.57 %[0m
+[0;32mI (50611) Main_App: Pressure:    9.90 hPa[0m
+[0;32mI (52611) Main_App: --- Telemetry Report ---[0m
+[0;32mI (52611) Main_App: Temperature: 23.25 °C[0m
+[0;32mI (52611) Main_App: Humidity:    56.46 %[0m
+[0;32mI (52611) Main_App: Pressure:    9.90 hPa[0m
+[0;32mI (54611) Main_App: --- Telemetry Report ---[0m
+[0;32mI (54611) Main_App: Temperature: 23.24 °C[0m
+[0;32mI (54611) Main_App: Humidity:    56.45 %[0m
+[0;32mI (54611) Main_App: Pressure:    9.90 hPa[0m
+[0;32mI (56611) Main_App: --- Telemetry Report ---[0m
+[0;32mI (56611) Main_App: Temperature: 23.26 °C[0m
+[0;32mI (56611) Main_App: Humidity:    56.90 %[0m
+[0;32mI (56611) Main_App: Pressure:    9.90 hPa[0m
+[0;32mI (58611) Main_App: --- Telemetry Report ---[0m
+[0;32mI (58611) Main_App: Temperature: 23.26 °C[0m
+[0;32mI (58611) Main_App: Humidity:    57.66 %[0m
+[0;32mI (58611) Main_App: Pressure:    9.90 hPa[0m
+[0;32mI (60611) Main_App: --- Telemetry Report ---[0m
+[0;32mI (60611) Main_App: Temperature: 23.28 °C[0m
+[0;32mI (60611) Main_App: Humidity:    57.66 %[0m
+[0;32mI (60611) Main_App: Pressure:    9.90 hPa[0m
+[0;32mI (62611) Main_App: --- Telemetry Report ---[0m
+[0;32mI (62611) Main_App: Temperature: 23.26 °C[0m
+[0;32mI (62611) Main_App: Humidity:    57.94 %[0m
+[0;32mI (62611) Main_App: Pressure:    9.90 hPa[0m
+[0;32mI (64611) Main_App: --- Telemetry Report ---[0m
+[0;32mI (64611) Main_App: Temperature: 23.26 °C[0m
+[0;32mI (64611) Main_App: Humidity:    57.50 %[0m
+[0;32mI (64611) Main_App: Pressure:    9.90 hPa[0m
+[0;32mI (66611) Main_App: --- Telemetry Report ---[0m
+[0;32mI (66611) Main_App: Temperature: 23.25 °C[0m
+[0;32mI (66611) Main_App: Humidity:    56.91 %[0m
+[0;32mI (66611) Main_App: Pressure:    9.90 hPa[0m
+[0;32mI (68611) Main_App: --- Telemetry Report ---[0m
+[0;32mI (68611) Main_App: Temperature: 23.24 °C[0m
+[0;32mI (68611) Main_App: Humidity:    57.60 %[0m
+[0;32mI (68611) Main_App: Pressure:    9.90 hPa[0m
+[0;32mI (70611) Main_App: --- Telemetry Report ---[0m
+[0;32mI (70611) Main_App: Temperature: 23.23 °C[0m
+[0;32mI (70611) Main_App: Humidity:    57.16 %[0m
+[0;32mI (70611) Main_App: Pressure:    9.90 hPa[0m
+[0;32mI (72611) Main_App: --- Telemetry Report ---[0m
+[0;32mI (72611) Main_App: Temperature: 23.23 °C[0m
+[0;32mI (72611) Main_App: Humidity:    56.71 %[0m
+[0;32mI (72611) Main_App: Pressure:    9.90 hPa[0m
+[0;32mI (74611) Main_App: --- Telemetry Report ---[0m
+[0;32mI (74611) Main_App: Temperature: 23.23 °C[0m
+[0;32mI (74611) Main_App: Humidity:    56.62 %[0m
+[0;32mI (74611) Main_App: Pressure:    9.90 hPa[0m
+[0;32mI (76611) Main_App: --- Telemetry Report ---[0m
+[0;32mI (76611) Main_App: Temperature: 23.23 °C[0m
+[0;32mI (76611) Main_App: Humidity:    56.63 %[0m
+[0;32mI (76611) Main_App: Pressure:    9.90 hPa[0m
+[0;32mI (78611) Main_App: --- Telemetry Report ---[0m
+[0;32mI (78611) Main_App: Temperature: 23.21 °C[0m
+[0;32mI (78611) Main_App: Humidity:    56.87 %[0m
+[0;32mI (78611) Main_App: Pressure:    9.90 hPa[0m
+[0;32mI (80611) Main_App: --- Telemetry Report ---[0m
+[0;32mI (80611) Main_App: Temperature: 23.21 °C[0m
+[0;32mI (80611) Main_App: Humidity:    56.63 %[0m
+[0;32mI (80611) Main_App: Pressure:    9.90 hPa[0m
+[0;32mI (82611) Main_App: --- Telemetry Report ---[0m
+[0;32mI (82611) Main_App: Temperature: 23.20 °C[0m
+[0;32mI (82611) Main_App: Humidity:    56.52 %[0m
+[0;32mI (82611) Main_App: Pressure:    9.90 hPa[0m
+[0;32mI (84611) Main_App: --- Telemetry Report ---[0m
+[0;32mI (84611) Main_App: Temperature: 23.19 °C[0m
+[0;32mI (84611) Main_App: Humidity:    56.69 %[0m
+[0;32mI (84611) Main_App: Pressure:    9.90 hPa[0m
+[0;32mI (86611) Main_App: --- Telemetry Report ---[0m
+[0;32mI (86611) Main_App: Temperature: 23.18 °C[0m
+[0;32mI (86611) Main_App: Humidity:    56.66 %[0m
+[0;32mI (86611) Main_App: Pressure:    9.90 hPa[0m
+[0;32mI (88611) Main_App: --- Telemetry Report ---[0m
+[0;32mI (88611) Main_App: Temperature: 23.16 °C[0m
+[0;32mI (88611) Main_App: Humidity:    56.55 %[0m
+[0;32mI (88611) Main_App: Pressure:    9.90 hPa[0m

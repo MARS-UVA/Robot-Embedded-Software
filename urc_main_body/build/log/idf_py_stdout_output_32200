@@ -1,0 +1,670 @@
+Command: C:\Espressif\tools\python\v6.1\venv\Scripts\python.exe C:\esp\v6.1\esp-idf\tools/idf_monitor.py -p COM8 -b 115200 --toolchain-prefix xtensa-esp32s3-elf- --target esp32s3 --revision 0 C:\Users\hairy\MARS\Robot-Embedded-Software\urc_main_body\build\urc_main_body.elf C:\Users\hairy\MARS\Robot-Embedded-Software\urc_main_body\build\bootloader\bootloader.elf --force-color -m 'C:\Espressif\tools\python\v6.1\venv\Scripts\python.exe' 'C:\esp\v6.1\esp-idf\tools\idf.py' '-p' 'COM8'
+ESP-ROM:esp32s3-20210327
+Build:Mar 27 2021
+rst:0x15 (USB_UART_CHIP_RESET),boot:0x8 (SPI_FAST_FLASH_BOOT)
+Saved PC:0x40379186
+SPIWP:0xee
+mode:DIO, clock div:1
+load:0x3fce2820,len:0x14f0
+load:0x403c8700,len:0xde4
+load:0x403cb700,len:0x2f58
+entry 0x403c8904
+[0;32mI (24) boot: ESP-IDF v6.1 2nd stage bootloader[0m
+[0;32mI (24) boot: compile time Nov  6 2026 18:12:29[0m
+[0;32mI (25) boot: Multicore bootloader[0m
+[0;32mI (25) boot: chip revision: v0.2[0m
+[0;32mI (27) boot: efuse block revision: v1.3[0m
+[0;32mI (31) boot.esp32s3: Boot SPI Speed : 80MHz[0m
+[0;32mI (35) boot.esp32s3: SPI Mode       : DIO[0m
+[0;32mI (39) boot.esp32s3: SPI Flash Size : 8MB[0m
+[0;32mI (42) boot: Enabling RNG early entropy source...[0m
+[0;32mI (47) boot: Partition Table:[0m
+[0;32mI (49) boot: ## Label            Usage          Type ST Offset   Length[0m
+[0;32mI (56) boot:  0 nvs              WiFi data        01 02 00009000 00006000[0m
+[0;32mI (62) boot:  1 phy_init         RF data          01 01 0000f000 00001000[0m
+[0;32mI (69) boot:  2 factory          factory app      00 00 00010000 00100000[0m
+[0;32mI (75) boot: End of partition table[0m
+[0;32mI (79) esp_image: segment 0: paddr=00010020 vaddr=3c020020 size=0b3f8h ( 46072) map[0m
+[0;32mI (94) esp_image: segment 1: paddr=0001b420 vaddr=3fc90700 size=031d8h ( 12760) load[0m
+[0;32mI (98) esp_image: segment 2: paddr=0001e600 vaddr=40374000 size=01a18h (  6680) load[0m
+[0;32mI (102) esp_image: segment 3: paddr=00020020 vaddr=42000020 size=168d8h ( 92376) map[0m
+[0;32mI (125) esp_image: segment 4: paddr=00036900 vaddr=40375a18 size=0ac90h ( 44176) load[0m
+[0;32mI (136) esp_image: segment 5: paddr=00041598 vaddr=50000000 size=00024h (    36) load[0m
+[0;32mI (141) boot: Loaded app from partition at offset 0x10000[0m
+[0;32mI (142) boot: Disabling RNG early entropy source...[0m
+[0;32mI (153) cpu_start: Multicore app[0m
+[0;32mI (162) cpu_start: GPIO 44 and 43 are used as console UART I/O pins[0m
+[0;32mI (163) cpu_start: Pro cpu start user code[0m
+[0;32mI (163) cpu_start: cpu freq: 160000000 Hz[0m
+[0;32mI (164) app_init: Application information:[0m
+[0;32mI (168) app_init: Project name:     urc_main_body[0m
+[0;32mI (172) app_init: App version:      7cb2522-dirty[0m
+[0;32mI (177) app_init: Compile time:     Nov  6 2026 18:11:47[0m
+[0;32mI (182) app_init: ELF file SHA256:  8517f685e...[0m
+[0;32mI (186) app_init: ESP-IDF:          v6.1[0m
+[0;32mI (190) efuse_init: Min chip rev:     v0.0[0m
+[0;32mI (194) efuse_init: Max chip rev:     v0.99 [0m
+[0;32mI (198) efuse_init: Chip rev:         v0.2[0m
+[0;32mI (201) heap_init: Initializing. RAM available for dynamic allocation:[0m
+[0;32mI (208) heap_init: At 3FC94410 len 00055300 (340 KiB): RAM[0m
+[0;32mI (213) heap_init: At 3FCE9710 len 00005724 (21 KiB): RAM[0m
+[0;32mI (218) heap_init: At 3FCF0000 len 00008000 (32 KiB): DRAM[0m
+[0;32mI (223) heap_init: At 600FE000 len 00001FE8 (7 KiB): RTCRAM[0m
+[0;32mI (230) spi_flash: detected chip: generic[0m
+[0;32mI (232) spi_flash: flash io: dio[0m
+[0;32mI (236) sleep_gpio: Configure to isolate all GPIO pins in sleep state[0m
+[0;32mI (242) sleep_gpio: Enable automatic switching of GPIO sleep configuration[0m
+[0;32mI (249) main_task: Started on CPU0[0m
+[0;32mI (249) main_task: Calling app_main()[0m
+[0;32mI (259) Main_App: Initializing BME280 sensor via pins SDA: 10, SCL: 11[0m
+[1;31mE (259) i2c.master: this port has not been initialized, please initialize it first[0m
+[0;32mI (269) i2c_bus: i2c0 bus inited[0m
+[0;32mI (269) i2c_bus: I2C Bus V2 Config Succeed, Version: 1.5.2[0m
+[0;32mI (279) BME280_Driver: I2C bus initialized successfully.[0m
+[0;32mI (279) main_task: Returned from app_main()[0m
+[0;32mI (589) BME280_Driver: BME280 sensor initialized successfully.[0m
+[0;32mI (599) BME280_Driver: Temperature result: ESP_FAIL[0m
+[0;32mI (599) BME280_Driver: Humidity result: ESP_FAIL[0m
+[0;32mI (599) BME280_Driver: Pressure result: ESP_FAIL[0m
+[1;31mE (599) BME280_Driver: Failed to read BME280 sensor data.[0m
+[0;33mW (609) Main_App: Telemetry data invalid or I2C bus failed to respond.[0m
+[0;32mI (2609) BME280_Driver: Temperature result: ESP_OK[0m
+[0;32mI (2609) BME280_Driver: Humidity result: ESP_OK[0m
+[0;32mI (2609) BME280_Driver: Pressure result: ESP_OK[0m
+[0;32mI (2609) BME280_Driver: Raw pressure value: 990.27[0m
+[0;32mI (2619) Main_App: --- Telemetry Report ---[0m
+[0;32mI (2619) Main_App: Temperature: 24.29 °C[0m
+[0;32mI (2619) Main_App: Humidity:    55.49 %[0m
+[0;32mI (2629) Main_App: Pressure:    9.90 hPa[0m
+[0;32mI (4629) BME280_Driver: Temperature result: ESP_OK[0m
+[0;32mI (4629) BME280_Driver: Humidity result: ESP_OK[0m
+[0;32mI (4629) BME280_Driver: Pressure result: ESP_OK[0m
+[0;32mI (4629) BME280_Driver: Raw pressure value: 990.27[0m
+[0;32mI (4639) Main_App: --- Telemetry Report ---[0m
+[0;32mI (4639) Main_App: Temperature: 24.30 °C[0m
+[0;32mI (4639) Main_App: Humidity:    57.68 %[0m
+[0;32mI (4649) Main_App: Pressure:    9.90 hPa[0m
+[0;32mI (6649) BME280_Driver: Temperature result: ESP_OK[0m
+[0;32mI (6649) BME280_Driver: Humidity result: ESP_OK[0m
+[0;32mI (6649) BME280_Driver: Pressure result: ESP_OK[0m
+[0;32mI (6649) BME280_Driver: Raw pressure value: 990.26[0m
+[0;32mI (6659) Main_App: --- Telemetry Report ---[0m
+[0;32mI (6659) Main_App: Temperature: 24.29 °C[0m
+[0;32mI (6659) Main_App: Humidity:    56.25 %[0m
+[0;32mI (6669) Main_App: Pressure:    9.90 hPa[0m
+[0;32mI (8669) BME280_Driver: Temperature result: ESP_OK[0m
+[0;32mI (8669) BME280_Driver: Humidity result: ESP_OK[0m
+[0;32mI (8669) BME280_Driver: Pressure result: ESP_OK[0m
+[0;32mI (8669) BME280_Driver: Raw pressure value: 990.29[0m
+[0;32mI (8679) Main_App: --- Telemetry Report ---[0m
+[0;32mI (8679) Main_App: Temperature: 24.28 °C[0m
+[0;32mI (8679) Main_App: Humidity:    55.75 %[0m
+[0;32mI (8689) Main_App: Pressure:    9.90 hPa[0m
+[0;32mI (10689) BME280_Driver: Temperature result: ESP_OK[0m
+[0;32mI (10689) BME280_Driver: Humidity result: ESP_OK[0m
+[0;32mI (10689) BME280_Driver: Pressure result: ESP_OK[0m
+[0;32mI (10689) BME280_Driver: Raw pressure value: 990.31[0m
+[0;32mI (10699) Main_App: --- Telemetry Report ---[0m
+[0;32mI (10699) Main_App: Temperature: 24.27 °C[0m
+[0;32mI (10699) Main_App: Humidity:    55.55 %[0m
+[0;32mI (10709) Main_App: Pressure:    9.90 hPa[0m
+[0;32mI (12709) BME280_Driver: Temperature result: ESP_OK[0m
+[0;32mI (12709) BME280_Driver: Humidity result: ESP_OK[0m
+[0;32mI (12709) BME280_Driver: Pressure result: ESP_OK[0m
+[0;32mI (12709) BME280_Driver: Raw pressure value: 990.29[0m
+[0;32mI (12719) Main_App: --- Telemetry Report ---[0m
+[0;32mI (12719) Main_App: Temperature: 24.26 °C[0m
+[0;32mI (12719) Main_App: Humidity:    55.10 %[0m
+[0;32mI (12729) Main_App: Pressure:    9.90 hPa[0m
+[0;32mI (14729) BME280_Driver: Temperature result: ESP_OK[0m
+[0;32mI (14729) BME280_Driver: Humidity result: ESP_OK[0m
+[0;32mI (14729) BME280_Driver: Pressure result: ESP_OK[0m
+[0;32mI (14729) BME280_Driver: Raw pressure value: 990.31[0m
+[0;32mI (14739) Main_App: --- Telemetry Report ---[0m
+[0;32mI (14739) Main_App: Temperature: 24.26 °C[0m
+[0;32mI (14739) Main_App: Humidity:    54.89 %[0m
+[0;32mI (14749) Main_App: Pressure:    9.90 hPa[0m
+[0;32mI (16749) BME280_Driver: Temperature result: ESP_OK[0m
+[0;32mI (16749) BME280_Driver: Humidity result: ESP_OK[0m
+[0;32mI (16749) BME280_Driver: Pressure result: ESP_OK[0m
+[0;32mI (16749) BME280_Driver: Raw pressure value: 990.27[0m
+[0;32mI (16759) Main_App: --- Telemetry Report ---[0m
+[0;32mI (16759) Main_App: Temperature: 24.25 °C[0m
+[0;32mI (16759) Main_App: Humidity:    56.13 %[0m
+[0;32mI (16769) Main_App: Pressure:    9.90 hPa[0m
+[0;32mI (18769) BME280_Driver: Temperature result: ESP_OK[0m
+[0;32mI (18769) BME280_Driver: Humidity result: ESP_OK[0m
+[0;32mI (18769) BME280_Driver: Pressure result: ESP_OK[0m
+[0;32mI (18769) BME280_Driver: Raw pressure value: 990.27[0m
+[0;32mI (18779) Main_App: --- Telemetry Report ---[0m
+[0;32mI (18779) Main_App: Temperature: 24.23 °C[0m
+[0;32mI (18779) Main_App: Humidity:    55.36 %[0m
+[0;32mI (18789) Main_App: Pressure:    9.90 hPa[0m
+[0;32mI (20789) BME280_Driver: Temperature result: ESP_OK[0m
+[0;32mI (20789) BME280_Driver: Humidity result: ESP_OK[0m
+[0;32mI (20789) BME280_Driver: Pressure result: ESP_OK[0m
+[0;32mI (20789) BME280_Driver: Raw pressure value: 990.30[0m
+[0;32mI (20799) Main_App: --- Telemetry Report ---[0m
+[0;32mI (20799) Main_App: Temperature: 24.24 °C[0m
+[0;32mI (20799) Main_App: Humidity:    56.99 %[0m
+[0;32mI (20809) Main_App: Pressure:    9.90 hPa[0m
+[0;32mI (22809) BME280_Driver: Temperature result: ESP_OK[0m
+[0;32mI (22809) BME280_Driver: Humidity result: ESP_OK[0m
+[0;32mI (22809) BME280_Driver: Pressure result: ESP_OK[0m
+[0;32mI (22809) BME280_Driver: Raw pressure value: 990.26[0m
+[0;32mI (22819) Main_App: --- Telemetry Report ---[0m
+[0;32mI (22819) Main_App: Temperature: 24.21 °C[0m
+[0;32mI (22819) Main_App: Humidity:    55.78 %[0m
+[0;32mI (22829) Main_App: Pressure:    9.90 hPa[0m
+[0;32mI (24829) BME280_Driver: Temperature result: ESP_OK[0m
+[0;32mI (24829) BME280_Driver: Humidity result: ESP_OK[0m
+[0;32mI (24829) BME280_Driver: Pressure result: ESP_OK[0m
+[0;32mI (24829) BME280_Driver: Raw pressure value: 990.32[0m
+[0;32mI (24839) Main_App: --- Telemetry Report ---[0m
+[0;32mI (24839) Main_App: Temperature: 24.22 °C[0m
+[0;32mI (24839) Main_App: Humidity:    57.18 %[0m
+[0;32mI (24849) Main_App: Pressure:    9.90 hPa[0m
+[0;32mI (26849) BME280_Driver: Temperature result: ESP_OK[0m
+[0;32mI (26849) BME280_Driver: Humidity result: ESP_OK[0m
+[0;32mI (26849) BME280_Driver: Pressure result: ESP_OK[0m
+[0;32mI (26849) BME280_Driver: Raw pressure value: 990.28[0m
+[0;32mI (26859) Main_App: --- Telemetry Report ---[0m
+[0;32mI (26859) Main_App: Temperature: 24.21 °C[0m
+[0;32mI (26859) Main_App: Humidity:    56.40 %[0m
+[0;32mI (26869) Main_App: Pressure:    9.90 hPa[0m
+[0;32mI (28869) BME280_Driver: Temperature result: ESP_OK[0m
+[0;32mI (28869) BME280_Driver: Humidity result: ESP_OK[0m
+[0;32mI (28869) BME280_Driver: Pressure result: ESP_OK[0m
+[0;32mI (28869) BME280_Driver: Raw pressure value: 990.27[0m
+[0;32mI (28879) Main_App: --- Telemetry Report ---[0m
+[0;32mI (28879) Main_App: Temperature: 24.20 °C[0m
+[0;32mI (28879) Main_App: Humidity:    55.87 %[0m
+[0;32mI (28889) Main_App: Pressure:    9.90 hPa[0m
+[0;32mI (30889) BME280_Driver: Temperature result: ESP_OK[0m
+[0;32mI (30889) BME280_Driver: Humidity result: ESP_OK[0m
+[0;32mI (30889) BME280_Driver: Pressure result: ESP_OK[0m
+[0;32mI (30889) BME280_Driver: Raw pressure value: 992.67[0m
+[0;32mI (30899) Main_App: --- Telemetry Report ---[0m
+[0;32mI (30899) Main_App: Temperature: 25.94 °C[0m
+[0;32mI (30899) Main_App: Humidity:    65.68 %[0m
+[0;32mI (30909) Main_App: Pressure:    9.93 hPa[0m
+[0;32mI (32909) BME280_Driver: Temperature result: ESP_OK[0m
+[0;32mI (32909) BME280_Driver: Humidity result: ESP_OK[0m
+[0;32mI (32909) BME280_Driver: Pressure result: ESP_OK[0m
+[0;32mI (32909) BME280_Driver: Raw pressure value: 991.88[0m
+[0;32mI (32919) Main_App: --- Telemetry Report ---[0m
+[0;32mI (32919) Main_App: Temperature: 27.36 °C[0m
+[0;32mI (32919) Main_App: Humidity:    68.74 %[0m
+[0;32mI (32929) Main_App: Pressure:    9.92 hPa[0m
+[0;32mI (34929) BME280_Driver: Temperature result: ESP_OK[0m
+[0;32mI (34929) BME280_Driver: Humidity result: ESP_OK[0m
+[0;32mI (34929) BME280_Driver: Pressure result: ESP_OK[0m
+[0;32mI (34929) BME280_Driver: Raw pressure value: 991.24[0m
+[0;32mI (34939) Main_App: --- Telemetry Report ---[0m
+[0;32mI (34939) Main_App: Temperature: 27.90 °C[0m
+[0;32mI (34939) Main_App: Humidity:    69.09 %[0m
+[0;32mI (34949) Main_App: Pressure:    9.91 hPa[0m
+[0;32mI (36949) BME280_Driver: Temperature result: ESP_OK[0m
+[0;32mI (36949) BME280_Driver: Humidity result: ESP_OK[0m
+[0;32mI (36949) BME280_Driver: Pressure result: ESP_OK[0m
+[0;32mI (36949) BME280_Driver: Raw pressure value: 990.92[0m
+[0;32mI (36959) Main_App: --- Telemetry Report ---[0m
+[0;32mI (36959) Main_App: Temperature: 28.35 °C[0m
+[0;32mI (36959) Main_App: Humidity:    69.07 %[0m
+[0;32mI (36969) Main_App: Pressure:    9.91 hPa[0m
+[0;32mI (38969) BME280_Driver: Temperature result: ESP_OK[0m
+[0;32mI (38969) BME280_Driver: Humidity result: ESP_OK[0m
+[0;32mI (38969) BME280_Driver: Pressure result: ESP_OK[0m
+[0;32mI (38969) BME280_Driver: Raw pressure value: 990.79[0m
+[0;32mI (38979) Main_App: --- Telemetry Report ---[0m
+[0;32mI (38979) Main_App: Temperature: 28.69 °C[0m
+[0;32mI (38979) Main_App: Humidity:    69.08 %[0m
+[0;32mI (38989) Main_App: Pressure:    9.91 hPa[0m
+[0;32mI (40989) BME280_Driver: Temperature result: ESP_OK[0m
+[0;32mI (40989) BME280_Driver: Humidity result: ESP_OK[0m
+[0;32mI (40989) BME280_Driver: Pressure result: ESP_OK[0m
+[0;32mI (40989) BME280_Driver: Raw pressure value: 990.65[0m
+[0;32mI (40999) Main_App: --- Telemetry Report ---[0m
+[0;32mI (40999) Main_App: Temperature: 28.99 °C[0m
+[0;32mI (40999) Main_App: Humidity:    69.11 %[0m
+[0;32mI (41009) Main_App: Pressure:    9.91 hPa[0m
+[0;32mI (43009) BME280_Driver: Temperature result: ESP_OK[0m
+[0;32mI (43009) BME280_Driver: Humidity result: ESP_OK[0m
+[0;32mI (43009) BME280_Driver: Pressure result: ESP_OK[0m
+[0;32mI (43009) BME280_Driver: Raw pressure value: 990.70[0m
+[0;32mI (43019) Main_App: --- Telemetry Report ---[0m
+[0;32mI (43019) Main_App: Temperature: 29.24 °C[0m
+[0;32mI (43019) Main_App: Humidity:    69.14 %[0m
+[0;32mI (43029) Main_App: Pressure:    9.91 hPa[0m
+[0;32mI (45029) BME280_Driver: Temperature result: ESP_OK[0m
+[0;32mI (45029) BME280_Driver: Humidity result: ESP_OK[0m
+[0;32mI (45029) BME280_Driver: Pressure result: ESP_OK[0m
+[0;32mI (45029) BME280_Driver: Raw pressure value: 990.64[0m
+[0;32mI (45039) Main_App: --- Telemetry Report ---[0m
+[0;32mI (45039) Main_App: Temperature: 29.47 °C[0m
+[0;32mI (45039) Main_App: Humidity:    69.18 %[0m
+[0;32mI (45049) Main_App: Pressure:    9.91 hPa[0m
+[0;32mI (47049) BME280_Driver: Temperature result: ESP_OK[0m
+[0;32mI (47049) BME280_Driver: Humidity result: ESP_OK[0m
+[0;32mI (47049) BME280_Driver: Pressure result: ESP_OK[0m
+[0;32mI (47049) BME280_Driver: Raw pressure value: 990.57[0m
+[0;32mI (47059) Main_App: --- Telemetry Report ---[0m
+[0;32mI (47059) Main_App: Temperature: 29.67 °C[0m
+[0;32mI (47059) Main_App: Humidity:    69.23 %[0m
+[0;32mI (47069) Main_App: Pressure:    9.91 hPa[0m
+[0;32mI (49069) BME280_Driver: Temperature result: ESP_OK[0m
+[0;32mI (49069) BME280_Driver: Humidity result: ESP_OK[0m
+[0;32mI (49069) BME280_Driver: Pressure result: ESP_OK[0m
+[0;32mI (49069) BME280_Driver: Raw pressure value: 990.31[0m
+[0;32mI (49079) Main_App: --- Telemetry Report ---[0m
+[0;32mI (49079) Main_App: Temperature: 29.84 °C[0m
+[0;32mI (49079) Main_App: Humidity:    69.58 %[0m
+[0;32mI (49089) Main_App: Pressure:    9.90 hPa[0m
+[0;32mI (51089) BME280_Driver: Temperature result: ESP_OK[0m
+[0;32mI (51089) BME280_Driver: Humidity result: ESP_OK[0m
+[0;32mI (51089) BME280_Driver: Pressure result: ESP_OK[0m
+[0;32mI (51089) BME280_Driver: Raw pressure value: 990.26[0m
+[0;32mI (51099) Main_App: --- Telemetry Report ---[0m
+[0;32mI (51099) Main_App: Temperature: 29.44 °C[0m
+[0;32mI (51099) Main_App: Humidity:    58.62 %[0m
+[0;32mI (51109) Main_App: Pressure:    9.90 hPa[0m
+[0;32mI (53109) BME280_Driver: Temperature result: ESP_OK[0m
+[0;32mI (53109) BME280_Driver: Humidity result: ESP_OK[0m
+[0;32mI (53109) BME280_Driver: Pressure result: ESP_OK[0m
+[0;32mI (53109) BME280_Driver: Raw pressure value: 990.28[0m
+[0;32mI (53119) Main_App: --- Telemetry Report ---[0m
+[0;32mI (53119) Main_App: Temperature: 29.35 °C[0m
+[0;32mI (53119) Main_App: Humidity:    53.25 %[0m
+[0;32mI (53129) Main_App: Pressure:    9.90 hPa[0m
+[0;32mI (55129) BME280_Driver: Temperature result: ESP_OK[0m
+[0;32mI (55129) BME280_Driver: Humidity result: ESP_OK[0m
+[0;32mI (55129) BME280_Driver: Pressure result: ESP_OK[0m
+[0;32mI (55129) BME280_Driver: Raw pressure value: 990.24[0m
+[0;32mI (55139) Main_App: --- Telemetry Report ---[0m
+[0;32mI (55139) Main_App: Temperature: 29.29 °C[0m
+[0;32mI (55139) Main_App: Humidity:    50.93 %[0m
+[0;32mI (55149) Main_App: Pressure:    9.90 hPa[0m
+[0;32mI (57149) BME280_Driver: Temperature result: ESP_OK[0m
+[0;32mI (57149) BME280_Driver: Humidity result: ESP_OK[0m
+[0;32mI (57149) BME280_Driver: Pressure result: ESP_OK[0m
+[0;32mI (57149) BME280_Driver: Raw pressure value: 990.32[0m
+[0;32mI (57159) Main_App: --- Telemetry Report ---[0m
+[0;32mI (57159) Main_App: Temperature: 29.20 °C[0m
+[0;32mI (57159) Main_App: Humidity:    49.12 %[0m
+[0;32mI (57169) Main_App: Pressure:    9.90 hPa[0m
+[0;32mI (59169) BME280_Driver: Temperature result: ESP_OK[0m
+[0;32mI (59169) BME280_Driver: Humidity result: ESP_OK[0m
+[0;32mI (59169) BME280_Driver: Pressure result: ESP_OK[0m
+[0;32mI (59169) BME280_Driver: Raw pressure value: 990.32[0m
+[0;32mI (59179) Main_App: --- Telemetry Report ---[0m
+[0;32mI (59179) Main_App: Temperature: 29.12 °C[0m
+[0;32mI (59179) Main_App: Humidity:    48.68 %[0m
+[0;32mI (59189) Main_App: Pressure:    9.90 hPa[0m
+[0;32mI (61189) BME280_Driver: Temperature result: ESP_OK[0m
+[0;32mI (61189) BME280_Driver: Humidity result: ESP_OK[0m
+[0;32mI (61189) BME280_Driver: Pressure result: ESP_OK[0m
+[0;32mI (61189) BME280_Driver: Raw pressure value: 990.35[0m
+[0;32mI (61199) Main_App: --- Telemetry Report ---[0m
+[0;32mI (61199) Main_App: Temperature: 29.05 °C[0m
+[0;32mI (61199) Main_App: Humidity:    48.74 %[0m
+[0;32mI (61209) Main_App: Pressure:    9.90 hPa[0m
+[0;32mI (63209) BME280_Driver: Temperature result: ESP_OK[0m
+[0;32mI (63209) BME280_Driver: Humidity result: ESP_OK[0m
+[0;32mI (63209) BME280_Driver: Pressure result: ESP_OK[0m
+[0;32mI (63209) BME280_Driver: Raw pressure value: 990.31[0m
+[0;32mI (63219) Main_App: --- Telemetry Report ---[0m
+[0;32mI (63219) Main_App: Temperature: 28.94 °C[0m
+[0;32mI (63219) Main_App: Humidity:    48.28 %[0m
+[0;32mI (63229) Main_App: Pressure:    9.90 hPa[0m
+[0;32mI (65229) BME280_Driver: Temperature result: ESP_OK[0m
+[0;32mI (65229) BME280_Driver: Humidity result: ESP_OK[0m
+[0;32mI (65229) BME280_Driver: Pressure result: ESP_OK[0m
+[0;32mI (65229) BME280_Driver: Raw pressure value: 990.31[0m
+[0;32mI (65239) Main_App: --- Telemetry Report ---[0m
+[0;32mI (65239) Main_App: Temperature: 28.85 °C[0m
+[0;32mI (65239) Main_App: Humidity:    47.58 %[0m
+[0;32mI (65249) Main_App: Pressure:    9.90 hPa[0m
+[0;32mI (67249) BME280_Driver: Temperature result: ESP_OK[0m
+[0;32mI (67249) BME280_Driver: Humidity result: ESP_OK[0m
+[0;32mI (67249) BME280_Driver: Pressure result: ESP_OK[0m
+[0;32mI (67249) BME280_Driver: Raw pressure value: 990.28[0m
+[0;32mI (67259) Main_App: --- Telemetry Report ---[0m
+[0;32mI (67259) Main_App: Temperature: 28.77 °C[0m
+[0;32mI (67259) Main_App: Humidity:    47.49 %[0m
+[0;32mI (67269) Main_App: Pressure:    9.90 hPa[0m
+[0;32mI (69269) BME280_Driver: Temperature result: ESP_OK[0m
+[0;32mI (69269) BME280_Driver: Humidity result: ESP_OK[0m
+[0;32mI (69269) BME280_Driver: Pressure result: ESP_OK[0m
+[0;32mI (69269) BME280_Driver: Raw pressure value: 990.30[0m
+[0;32mI (69279) Main_App: --- Telemetry Report ---[0m
+[0;32mI (69279) Main_App: Temperature: 28.67 °C[0m
+[0;32mI (69279) Main_App: Humidity:    50.00 %[0m
+[0;32mI (69289) Main_App: Pressure:    9.90 hPa[0m
+[0;32mI (71289) BME280_Driver: Temperature result: ESP_OK[0m
+[0;32mI (71289) BME280_Driver: Humidity result: ESP_OK[0m
+[0;32mI (71289) BME280_Driver: Pressure result: ESP_OK[0m
+[0;32mI (71289) BME280_Driver: Raw pressure value: 990.31[0m
+[0;32mI (71299) Main_App: --- Telemetry Report ---[0m
+[0;32mI (71299) Main_App: Temperature: 29.71 °C[0m
+[0;32mI (71299) Main_App: Humidity:    80.90 %[0m
+[0;32mI (71309) Main_App: Pressure:    9.90 hPa[0m
+[0;32mI (73309) BME280_Driver: Temperature result: ESP_OK[0m
+[0;32mI (73309) BME280_Driver: Humidity result: ESP_OK[0m
+[0;32mI (73309) BME280_Driver: Pressure result: ESP_OK[0m
+[0;32mI (73309) BME280_Driver: Raw pressure value: 990.32[0m
+[0;32mI (73319) Main_App: --- Telemetry Report ---[0m
+[0;32mI (73319) Main_App: Temperature: 29.41 °C[0m
+[0;32mI (73319) Main_App: Humidity:    84.51 %[0m
+[0;32mI (73329) Main_App: Pressure:    9.90 hPa[0m
+[0;32mI (75329) BME280_Driver: Temperature result: ESP_OK[0m
+[0;32mI (75329) BME280_Driver: Humidity result: ESP_OK[0m
+[0;32mI (75329) BME280_Driver: Pressure result: ESP_OK[0m
+[0;32mI (75329) BME280_Driver: Raw pressure value: 990.33[0m
+[0;32mI (75339) Main_App: --- Telemetry Report ---[0m
+[0;32mI (75339) Main_App: Temperature: 29.12 °C[0m
+[0;32mI (75339) Main_App: Humidity:    81.98 %[0m
+[0;32mI (75349) Main_App: Pressure:    9.90 hPa[0m
+[0;32mI (77349) BME280_Driver: Temperature result: ESP_OK[0m
+[0;32mI (77349) BME280_Driver: Humidity result: ESP_OK[0m
+[0;32mI (77349) BME280_Driver: Pressure result: ESP_OK[0m
+[0;32mI (77349) BME280_Driver: Raw pressure value: 990.34[0m
+[0;32mI (77359) Main_App: --- Telemetry Report ---[0m
+[0;32mI (77359) Main_App: Temperature: 29.08 °C[0m
+[0;32mI (77359) Main_App: Humidity:    82.33 %[0m
+[0;32mI (77369) Main_App: Pressure:    9.90 hPa[0m
+[0;32mI (79369) BME280_Driver: Temperature result: ESP_OK[0m
+[0;32mI (79369) BME280_Driver: Humidity result: ESP_OK[0m
+[0;32mI (79369) BME280_Driver: Pressure result: ESP_OK[0m
+[0;32mI (79369) BME280_Driver: Raw pressure value: 990.32[0m
+[0;32mI (79379) Main_App: --- Telemetry Report ---[0m
+[0;32mI (79379) Main_App: Temperature: 28.82 °C[0m
+[0;32mI (79379) Main_App: Humidity:    73.30 %[0m
+[0;32mI (79389) Main_App: Pressure:    9.90 hPa[0m
+[0;32mI (81389) BME280_Driver: Temperature result: ESP_OK[0m
+[0;32mI (81389) BME280_Driver: Humidity result: ESP_OK[0m
+[0;32mI (81389) BME280_Driver: Pressure result: ESP_OK[0m
+[0;32mI (81389) BME280_Driver: Raw pressure value: 990.29[0m
+[0;32mI (81399) Main_App: --- Telemetry Report ---[0m
+[0;32mI (81399) Main_App: Temperature: 28.88 °C[0m
+[0;32mI (81399) Main_App: Humidity:    71.39 %[0m
+[0;32mI (81409) Main_App: Pressure:    9.90 hPa[0m
+[0;32mI (83409) BME280_Driver: Temperature result: ESP_OK[0m
+[0;32mI (83409) BME280_Driver: Humidity result: ESP_OK[0m
+[0;32mI (83409) BME280_Driver: Pressure result: ESP_OK[0m
+[0;32mI (83409) BME280_Driver: Raw pressure value: 990.34[0m
+[0;32mI (83419) Main_App: --- Telemetry Report ---[0m
+[0;32mI (83419) Main_App: Temperature: 28.87 °C[0m
+[0;32mI (83419) Main_App: Humidity:    68.97 %[0m
+[0;32mI (83429) Main_App: Pressure:    9.90 hPa[0m
+[0;32mI (85429) BME280_Driver: Temperature result: ESP_OK[0m
+[0;32mI (85429) BME280_Driver: Humidity result: ESP_OK[0m
+[0;32mI (85429) BME280_Driver: Pressure result: ESP_OK[0m
+[0;32mI (85429) BME280_Driver: Raw pressure value: 990.37[0m
+[0;32mI (85439) Main_App: --- Telemetry Report ---[0m
+[0;32mI (85439) Main_App: Temperature: 28.91 °C[0m
+[0;32mI (85439) Main_App: Humidity:    70.69 %[0m
+[0;32mI (85449) Main_App: Pressure:    9.90 hPa[0m
+[0;32mI (87449) BME280_Driver: Temperature result: ESP_OK[0m
+[0;32mI (87449) BME280_Driver: Humidity result: ESP_OK[0m
+[0;32mI (87449) BME280_Driver: Pressure result: ESP_OK[0m
+[0;32mI (87449) BME280_Driver: Raw pressure value: 990.31[0m
+[0;32mI (87459) Main_App: --- Telemetry Report ---[0m
+[0;32mI (87459) Main_App: Temperature: 28.83 °C[0m
+[0;32mI (87459) Main_App: Humidity:    67.18 %[0m
+[0;32mI (87469) Main_App: Pressure:    9.90 hPa[0m
+[0;32mI (89469) BME280_Driver: Temperature result: ESP_OK[0m
+[0;32mI (89469) BME280_Driver: Humidity result: ESP_OK[0m
+[0;32mI (89469) BME280_Driver: Pressure result: ESP_OK[0m
+[0;32mI (89469) BME280_Driver: Raw pressure value: 990.36[0m
+[0;32mI (89479) Main_App: --- Telemetry Report ---[0m
+[0;32mI (89479) Main_App: Temperature: 28.87 °C[0m
+[0;32mI (89479) Main_App: Humidity:    62.50 %[0m
+[0;32mI (89489) Main_App: Pressure:    9.90 hPa[0m
+[0;32mI (91489) BME280_Driver: Temperature result: ESP_OK[0m
+[0;32mI (91489) BME280_Driver: Humidity result: ESP_OK[0m
+[0;32mI (91489) BME280_Driver: Pressure result: ESP_OK[0m
+[0;32mI (91489) BME280_Driver: Raw pressure value: 990.32[0m
+[0;32mI (91499) Main_App: --- Telemetry Report ---[0m
+[0;32mI (91499) Main_App: Temperature: 28.87 °C[0m
+[0;32mI (91499) Main_App: Humidity:    60.17 %[0m
+[0;32mI (91509) Main_App: Pressure:    9.90 hPa[0m
+[0;32mI (93509) BME280_Driver: Temperature result: ESP_OK[0m
+[0;32mI (93509) BME280_Driver: Humidity result: ESP_OK[0m
+[0;32mI (93509) BME280_Driver: Pressure result: ESP_OK[0m
+[0;32mI (93509) BME280_Driver: Raw pressure value: 990.29[0m
+[0;32mI (93519) Main_App: --- Telemetry Report ---[0m
+[0;32mI (93519) Main_App: Temperature: 28.82 °C[0m
+[0;32mI (93519) Main_App: Humidity:    53.86 %[0m
+[0;32mI (93529) Main_App: Pressure:    9.90 hPa[0m
+[0;32mI (95529) BME280_Driver: Temperature result: ESP_OK[0m
+[0;32mI (95529) BME280_Driver: Humidity result: ESP_OK[0m
+[0;32mI (95529) BME280_Driver: Pressure result: ESP_OK[0m
+[0;32mI (95529) BME280_Driver: Raw pressure value: 990.34[0m
+[0;32mI (95539) Main_App: --- Telemetry Report ---[0m
+[0;32mI (95539) Main_App: Temperature: 28.80 °C[0m
+[0;32mI (95539) Main_App: Humidity:    51.62 %[0m
+[0;32mI (95549) Main_App: Pressure:    9.90 hPa[0m
+[0;32mI (97549) BME280_Driver: Temperature result: ESP_OK[0m
+[0;32mI (97549) BME280_Driver: Humidity result: ESP_OK[0m
+[0;32mI (97549) BME280_Driver: Pressure result: ESP_OK[0m
+[0;32mI (97549) BME280_Driver: Raw pressure value: 990.30[0m
+[0;32mI (97559) Main_App: --- Telemetry Report ---[0m
+[0;32mI (97559) Main_App: Temperature: 28.75 °C[0m
+[0;32mI (97559) Main_App: Humidity:    50.96 %[0m
+[0;32mI (97569) Main_App: Pressure:    9.90 hPa[0m
+[0;32mI (99569) BME280_Driver: Temperature result: ESP_OK[0m
+[0;32mI (99569) BME280_Driver: Humidity result: ESP_OK[0m
+[0;32mI (99569) BME280_Driver: Pressure result: ESP_OK[0m
+[0;32mI (99569) BME280_Driver: Raw pressure value: 990.30[0m
+[0;32mI (99579) Main_App: --- Telemetry Report ---[0m
+[0;32mI (99579) Main_App: Temperature: 28.68 °C[0m
+[0;32mI (99579) Main_App: Humidity:    49.86 %[0m
+[0;32mI (99589) Main_App: Pressure:    9.90 hPa[0m
+[0;32mI (101589) BME280_Driver: Temperature result: ESP_OK[0m
+[0;32mI (101589) BME280_Driver: Humidity result: ESP_OK[0m
+[0;32mI (101589) BME280_Driver: Pressure result: ESP_OK[0m
+[0;32mI (101589) BME280_Driver: Raw pressure value: 990.29[0m
+[0;32mI (101599) Main_App: --- Telemetry Report ---[0m
+[0;32mI (101599) Main_App: Temperature: 28.58 °C[0m
+[0;32mI (101599) Main_App: Humidity:    49.19 %[0m
+[0;32mI (101609) Main_App: Pressure:    9.90 hPa[0m
+[0;32mI (103609) BME280_Driver: Temperature result: ESP_OK[0m
+[0;32mI (103609) BME280_Driver: Humidity result: ESP_OK[0m
+[0;32mI (103609) BME280_Driver: Pressure result: ESP_OK[0m
+[0;32mI (103609) BME280_Driver: Raw pressure value: 990.32[0m
+[0;32mI (103619) Main_App: --- Telemetry Report ---[0m
+[0;32mI (103619) Main_App: Temperature: 28.47 °C[0m
+[0;32mI (103619) Main_App: Humidity:    48.71 %[0m
+[0;32mI (103629) Main_App: Pressure:    9.90 hPa[0m
+[0;32mI (105629) BME280_Driver: Temperature result: ESP_OK[0m
+[0;32mI (105629) BME280_Driver: Humidity result: ESP_OK[0m
+[0;32mI (105629) BME280_Driver: Pressure result: ESP_OK[0m
+[0;32mI (105629) BME280_Driver: Raw pressure value: 990.32[0m
+[0;32mI (105639) Main_App: --- Telemetry Report ---[0m
+[0;32mI (105639) Main_App: Temperature: 28.35 °C[0m
+[0;32mI (105639) Main_App: Humidity:    48.54 %[0m
+[0;32mI (105649) Main_App: Pressure:    9.90 hPa[0m
+[0;32mI (107649) BME280_Driver: Temperature result: ESP_OK[0m
+[0;32mI (107649) BME280_Driver: Humidity result: ESP_OK[0m
+[0;32mI (107649) BME280_Driver: Pressure result: ESP_OK[0m
+[0;32mI (107649) BME280_Driver: Raw pressure value: 990.34[0m
+[0;32mI (107659) Main_App: --- Telemetry Report ---[0m
+[0;32mI (107659) Main_App: Temperature: 28.24 °C[0m
+[0;32mI (107659) Main_App: Humidity:    48.16 %[0m
+[0;32mI (107669) Main_App: Pressure:    9.90 hPa[0m
+[0;32mI (109669) BME280_Driver: Temperature result: ESP_OK[0m
+[0;32mI (109669) BME280_Driver: Humidity result: ESP_OK[0m
+[0;32mI (109669) BME280_Driver: Pressure result: ESP_OK[0m
+[0;32mI (109669) BME280_Driver: Raw pressure value: 990.32[0m
+[0;32mI (109679) Main_App: --- Telemetry Report ---[0m
+[0;32mI (109679) Main_App: Temperature: 28.11 °C[0m
+[0;32mI (109679) Main_App: Humidity:    48.08 %[0m
+[0;32mI (109689) Main_App: Pressure:    9.90 hPa[0m
+[0;32mI (111689) BME280_Driver: Temperature result: ESP_OK[0m
+[0;32mI (111689) BME280_Driver: Humidity result: ESP_OK[0m
+[0;32mI (111689) BME280_Driver: Pressure result: ESP_OK[0m
+[0;32mI (111689) BME280_Driver: Raw pressure value: 990.28[0m
+[0;32mI (111699) Main_App: --- Telemetry Report ---[0m
+[0;32mI (111699) Main_App: Temperature: 28.03 °C[0m
+[0;32mI (111699) Main_App: Humidity:    48.24 %[0m
+[0;32mI (111709) Main_App: Pressure:    9.90 hPa[0m
+[0;32mI (113709) BME280_Driver: Temperature result: ESP_OK[0m
+[0;32mI (113709) BME280_Driver: Humidity result: ESP_OK[0m
+[0;32mI (113709) BME280_Driver: Pressure result: ESP_OK[0m
+[0;32mI (113709) BME280_Driver: Raw pressure value: 990.26[0m
+[0;32mI (113719) Main_App: --- Telemetry Report ---[0m
+[0;32mI (113719) Main_App: Temperature: 27.92 °C[0m
+[0;32mI (113719) Main_App: Humidity:    48.78 %[0m
+[0;32mI (113729) Main_App: Pressure:    9.90 hPa[0m
+[0;32mI (115729) BME280_Driver: Temperature result: ESP_OK[0m
+[0;32mI (115729) BME280_Driver: Humidity result: ESP_OK[0m
+[0;32mI (115729) BME280_Driver: Pressure result: ESP_OK[0m
+[0;32mI (115729) BME280_Driver: Raw pressure value: 990.29[0m
+[0;32mI (115739) Main_App: --- Telemetry Report ---[0m
+[0;32mI (115739) Main_App: Temperature: 27.82 °C[0m
+[0;32mI (115739) Main_App: Humidity:    48.29 %[0m
+[0;32mI (115749) Main_App: Pressure:    9.90 hPa[0m
+[0;32mI (117749) BME280_Driver: Temperature result: ESP_OK[0m
+[0;32mI (117749) BME280_Driver: Humidity result: ESP_OK[0m
+[0;32mI (117749) BME280_Driver: Pressure result: ESP_OK[0m
+[0;32mI (117749) BME280_Driver: Raw pressure value: 990.34[0m
+[0;32mI (117759) Main_App: --- Telemetry Report ---[0m
+[0;32mI (117759) Main_App: Temperature: 27.70 °C[0m
+[0;32mI (117759) Main_App: Humidity:    48.17 %[0m
+[0;32mI (117769) Main_App: Pressure:    9.90 hPa[0m
+[0;32mI (119769) BME280_Driver: Temperature result: ESP_OK[0m
+[0;32mI (119769) BME280_Driver: Humidity result: ESP_OK[0m
+[0;32mI (119769) BME280_Driver: Pressure result: ESP_OK[0m
+[0;32mI (119769) BME280_Driver: Raw pressure value: 990.34[0m
+[0;32mI (119779) Main_App: --- Telemetry Report ---[0m
+[0;32mI (119779) Main_App: Temperature: 27.57 °C[0m
+[0;32mI (119779) Main_App: Humidity:    49.20 %[0m
+[0;32mI (119789) Main_App: Pressure:    9.90 hPa[0m
+[0;32mI (121789) BME280_Driver: Temperature result: ESP_OK[0m
+[0;32mI (121789) BME280_Driver: Humidity result: ESP_OK[0m
+[0;32mI (121789) BME280_Driver: Pressure result: ESP_OK[0m
+[0;32mI (121789) BME280_Driver: Raw pressure value: 990.28[0m
+[0;32mI (121799) Main_App: --- Telemetry Report ---[0m
+[0;32mI (121799) Main_App: Temperature: 27.47 °C[0m
+[0;32mI (121799) Main_App: Humidity:    50.46 %[0m
+[0;32mI (121809) Main_App: Pressure:    9.90 hPa[0m
+[0;32mI (123809) BME280_Driver: Temperature result: ESP_OK[0m
+[0;32mI (123809) BME280_Driver: Humidity result: ESP_OK[0m
+[0;32mI (123809) BME280_Driver: Pressure result: ESP_OK[0m
+[0;32mI (123809) BME280_Driver: Raw pressure value: 990.29[0m
+[0;32mI (123819) Main_App: --- Telemetry Report ---[0m
+[0;32mI (123819) Main_App: Temperature: 27.37 °C[0m
+[0;32mI (123819) Main_App: Humidity:    49.42 %[0m
+[0;32mI (123829) Main_App: Pressure:    9.90 hPa[0m
+[0;32mI (125829) BME280_Driver: Temperature result: ESP_OK[0m
+[0;32mI (125829) BME280_Driver: Humidity result: ESP_OK[0m
+[0;32mI (125829) BME280_Driver: Pressure result: ESP_OK[0m
+[0;32mI (125829) BME280_Driver: Raw pressure value: 990.28[0m
+[0;32mI (125839) Main_App: --- Telemetry Report ---[0m
+[0;32mI (125839) Main_App: Temperature: 27.26 °C[0m
+[0;32mI (125839) Main_App: Humidity:    49.19 %[0m
+[0;32mI (125849) Main_App: Pressure:    9.90 hPa[0m
+[0;32mI (127849) BME280_Driver: Temperature result: ESP_OK[0m
+[0;32mI (127849) BME280_Driver: Humidity result: ESP_OK[0m
+[0;32mI (127849) BME280_Driver: Pressure result: ESP_OK[0m
+[0;32mI (127849) BME280_Driver: Raw pressure value: 990.28[0m
+[0;32mI (127859) Main_App: --- Telemetry Report ---[0m
+[0;32mI (127859) Main_App: Temperature: 27.16 °C[0m
+[0;32mI (127859) Main_App: Humidity:    49.13 %[0m
+[0;32mI (127869) Main_App: Pressure:    9.90 hPa[0m
+[0;32mI (129869) BME280_Driver: Temperature result: ESP_OK[0m
+[0;32mI (129869) BME280_Driver: Humidity result: ESP_OK[0m
+[0;32mI (129869) BME280_Driver: Pressure result: ESP_OK[0m
+[0;32mI (129869) BME280_Driver: Raw pressure value: 990.29[0m
+[0;32mI (129879) Main_App: --- Telemetry Report ---[0m
+[0;32mI (129879) Main_App: Temperature: 27.05 °C[0m
+[0;32mI (129879) Main_App: Humidity:    49.07 %[0m
+[0;32mI (129889) Main_App: Pressure:    9.90 hPa[0m
+[0;32mI (131889) BME280_Driver: Temperature result: ESP_OK[0m
+[0;32mI (131889) BME280_Driver: Humidity result: ESP_OK[0m
+[0;32mI (131889) BME280_Driver: Pressure result: ESP_OK[0m
+[0;32mI (131889) BME280_Driver: Raw pressure value: 990.30[0m
+[0;32mI (131899) Main_App: --- Telemetry Report ---[0m
+[0;32mI (131899) Main_App: Temperature: 26.96 °C[0m
+[0;32mI (131899) Main_App: Humidity:    49.07 %[0m
+[0;32mI (131909) Main_App: Pressure:    9.90 hPa[0m
+[0;32mI (133909) BME280_Driver: Temperature result: ESP_OK[0m
+[0;32mI (133909) BME280_Driver: Humidity result: ESP_OK[0m
+[0;32mI (133909) BME280_Driver: Pressure result: ESP_OK[0m
+[0;32mI (133909) BME280_Driver: Raw pressure value: 990.33[0m
+[0;32mI (133919) Main_App: --- Telemetry Report ---[0m
+[0;32mI (133919) Main_App: Temperature: 26.85 °C[0m
+[0;32mI (133919) Main_App: Humidity:    49.24 %[0m
+[0;32mI (133929) Main_App: Pressure:    9.90 hPa[0m
+[0;32mI (135929) BME280_Driver: Temperature result: ESP_OK[0m
+[0;32mI (135929) BME280_Driver: Humidity result: ESP_OK[0m
+[0;32mI (135929) BME280_Driver: Pressure result: ESP_OK[0m
+[0;32mI (135929) BME280_Driver: Raw pressure value: 990.27[0m
+[0;32mI (135939) Main_App: --- Telemetry Report ---[0m
+[0;32mI (135939) Main_App: Temperature: 26.76 °C[0m
+[0;32mI (135939) Main_App: Humidity:    49.45 %[0m
+[0;32mI (135949) Main_App: Pressure:    9.90 hPa[0m
+[0;32mI (137949) BME280_Driver: Temperature result: ESP_OK[0m
+[0;32mI (137949) BME280_Driver: Humidity result: ESP_OK[0m
+[0;32mI (137949) BME280_Driver: Pressure result: ESP_OK[0m
+[0;32mI (137949) BME280_Driver: Raw pressure value: 990.31[0m
+[0;32mI (137959) Main_App: --- Telemetry Report ---[0m
+[0;32mI (137959) Main_App: Temperature: 26.68 °C[0m
+[0;32mI (137959) Main_App: Humidity:    49.59 %[0m
+[0;32mI (137969) Main_App: Pressure:    9.90 hPa[0m
+[0;32mI (139969) BME280_Driver: Temperature result: ESP_OK[0m
+[0;32mI (139969) BME280_Driver: Humidity result: ESP_OK[0m
+[0;32mI (139969) BME280_Driver: Pressure result: ESP_OK[0m
+[0;32mI (139969) BME280_Driver: Raw pressure value: 990.32[0m
+[0;32mI (139979) Main_App: --- Telemetry Report ---[0m
+[0;32mI (139979) Main_App: Temperature: 26.61 °C[0m
+[0;32mI (139979) Main_App: Humidity:    49.73 %[0m
+[0;32mI (139989) Main_App: Pressure:    9.90 hPa[0m
+[0;32mI (141989) BME280_Driver: Temperature result: ESP_OK[0m
+[0;32mI (141989) BME280_Driver: Humidity result: ESP_OK[0m
+[0;32mI (141989) BME280_Driver: Pressure result: ESP_OK[0m
+[0;32mI (141989) BME280_Driver: Raw pressure value: 990.30[0m
+[0;32mI (141999) Main_App: --- Telemetry Report ---[0m
+[0;32mI (141999) Main_App: Temperature: 26.53 °C[0m
+[0;32mI (141999) Main_App: Humidity:    49.72 %[0m
+[0;32mI (142009) Main_App: Pressure:    9.90 hPa[0m
+[0;32mI (144009) BME280_Driver: Temperature result: ESP_OK[0m
+[0;32mI (144009) BME280_Driver: Humidity result: ESP_OK[0m
+[0;32mI (144009) BME280_Driver: Pressure result: ESP_OK[0m
+[0;32mI (144009) BME280_Driver: Raw pressure value: 990.32[0m
+[0;32mI (144019) Main_App: --- Telemetry Report ---[0m
+[0;32mI (144019) Main_App: Temperature: 26.45 °C[0m
+[0;32mI (144019) Main_App: Humidity:    49.86 %[0m
+[0;32mI (144029) Main_App: Pressure:    9.90 hPa[0m
+[0;32mI (146029) BME280_Driver: Temperature result: ESP_OK[0m
+[0;32mI (146029) BME280_Driver: Humidity result: ESP_OK[0m
+[0;32mI (146029) BME280_Driver: Pressure result: ESP_OK[0m
+[0;32mI (146029) BME280_Driver: Raw pressure value: 990.33[0m
+[0;32mI (146039) Main_App: --- Telemetry Report ---[0m
+[0;32mI (146039) Main_App: Temperature: 26.37 °C[0m
+[0;32mI (146039) Main_App: Humidity:    49.84 %[0m
+[0;32mI (146049) Main_App: Pressure:    9.90 hPa[0m
+[0;32mI (148049) BME280_Driver: Temperature result: ESP_OK[0m
+[0;32mI (148049) BME280_Driver: Humidity result: ESP_OK[0m
+[0;32mI (148049) BME280_Driver: Pressure result: ESP_OK[0m
+[0;32mI (148049) BME280_Driver: Raw pressure value: 990.37[0m
+[0;32mI (148059) Main_App: --- Telemetry Report ---[0m
+[0;32mI (148059) Main_App: Temperature: 26.28 °C[0m
+[0;32mI (148059) Main_App: Humidity:    50.05 %[0m
+[0;32mI (148069) Main_App: Pressure:    9.90 hPa[0m
+[0;32mI (150069) BME280_Driver: Temperature result: ESP_OK[0m
+[0;32mI (150069) BME280_Driver: Humidity result: ESP_OK[0m
+[0;32mI (150069) BME280_Driver: Pressure result: ESP_OK[0m
+[0;32mI (150069) BME280_Driver: Raw pressure value: 990.33[0m
+[0;32mI (150079) Main_App: --- Telemetry Report ---[0m
+[0;32mI (150079) Main_App: Temperature: 26.20 °C[0m
+[0;32mI (150079) Main_App: Humidity:    50.05 %[0m
+[0;32mI (150089) Main_App: Pressure:    9.90 hPa[0m
+[0;32mI (152089) BME280_Driver: Temperature result: ESP_OK[0m
+[0;32mI (152089) BME280_Driver: Humidity result: ESP_OK[0m
+[0;32mI (152089) BME280_Driver: Pressure result: ESP_OK[0m
+[0;32mI (152089) BME280_Driver: Raw pressure value: 990.34[0m
+[0;32mI (152099) Main_App: --- Telemetry Report ---[0m
+[0;32mI (152099) Main_App: Temperature: 26.12 °C[0m
+[0;32mI (152099) Main_App: Humidity:    50.12 %[0m
+[0;32mI (152109) Main_App: Pressure:    9.90 hPa[0m
