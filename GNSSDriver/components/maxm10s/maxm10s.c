@@ -10,6 +10,8 @@
 #include "driver/gpio.h"
 #include "driver/i2c_master.h"
 #include "esp_log.h"
+#include "esp_types.h"
+#include "esp_check.h"
 
 #define I2C_ADD 0x42
 #define NUM_BYTES_REGISTER 0xFD
@@ -20,13 +22,13 @@ static const char *TAG = "maxm10";
 i2c_master_bus_handle_t bus;
 i2c_master_dev_handle_t dev;
 
-void parseNMEA_GGA (const char* nmeaGgaString, maxm10s_data_t* data){
+void parseNMEA_GGA (const char *nmeaGgaString, maxm10s_data_t *data){
     
     sscanf(nmeaGgaString,"$GNGGA,%2d%2d%f,%f,%c,%f,%c,%d,%d,%f,%f,%c,%f,%c",
            &data->utc_hour, &data->utc_minute, &data->utc_second,
            &data->latitude, &data->lat_N_S,
            &data->longitude, &data->lon_E_W,
-           &data->fix_quality, &data->num_satellites, &GGA_data->horizontal_dilution,
+           &data->fix_quality, &data->num_satellites, &data->horizontal_dilution,
            &data->altitude, &data->alt_unit, &data->height_geoid,
            &data->height_geoid_unit);
     
@@ -69,8 +71,7 @@ bool validateChecksum(const char* nmeaString) {
 }
 
 
-
-esp_err_t maxm10s_init(maxm10s_config_t config, maxm10s_dev_handle_t dev_handle)
+esp_err_t maxm10s_init(maxm10s_config_t *config, maxm10s_dev_handle_t *dev_handle)
 {
     i2c_master_bus_config_t bus_config = {
         .i2c_port = -1,
@@ -81,12 +82,12 @@ esp_err_t maxm10s_init(maxm10s_config_t config, maxm10s_dev_handle_t dev_handle)
         .flags.enable_internal_pullup = true,
     };
 
-    esp_err_t ret = ESP_ERROR_CHECK(i2c_new_master_bus(&bus_config, &bus));
+    esp_err_t ret = i2c_new_master_bus(&bus_config, &bus);
 
     ESP_RETURN_ON_ERROR(ret, TAG, "i2c bus initialization failed");
 
     dev_handle->sda_pin = config->sda_pin;
-    dev_hanlde->scl_pin = conifg->scl_pin;
+    dev_handle->scl_pin = config->scl_pin;
     dev_handle->i2c_bus_handle = &bus;
 
     i2c_device_config_t dev_config = {
@@ -96,7 +97,7 @@ esp_err_t maxm10s_init(maxm10s_config_t config, maxm10s_dev_handle_t dev_handle)
     };
 
 
-    ret = ESP_ERROR_CHECK(i2c_master_bus_add_device(bus, &dev_config, &dev));
+    ret = i2c_master_bus_add_device(bus, &dev_config, &dev);
 
     ESP_RETURN_ON_ERROR(ret, TAG, "i2c device intialization failed");
 
@@ -106,13 +107,13 @@ esp_err_t maxm10s_init(maxm10s_config_t config, maxm10s_dev_handle_t dev_handle)
 
 }
 
-esp_err_t maxm10s_read(maxm10s_dev_hanlde_t dev_handle, maxm10s_data_handle_t data) {
-    uint8_t tx_data[16];
+esp_err_t maxm10s_read(maxm10s_dev_handle_t *dev_handle, maxm10s_data_t *data) {
+    uint8_t rx_data[16];
 	char gps_string_in[250]; 
 	int string_idx = 0;
 	uint32_t num_to_read = 0;
     uint8_t curReg = NUM_BYTES_REGISTER;
-    esp_err_t ret = i2c_master_transmit_receive(dev_handle->i2c_dev_handle, &curReg, 1, rx_data, 2, 1000);
+    esp_err_t ret = i2c_master_transmit_receive(*dev_handle->i2c_dev_handle, &curReg, 1, rx_data, 2, 1000);
     ESP_RETURN_ON_ERROR(ret, TAG, "i2c transmit failed");
     while(num_to_read > 0){
             size_t n;
@@ -132,7 +133,7 @@ esp_err_t maxm10s_read(maxm10s_dev_hanlde_t dev_handle, maxm10s_data_handle_t da
                 if (cur == '\n') {
                     gps_string_in[string_idx] = '\0';
                     if (strstr(gps_string_in, "GNGGA") != NULL && validateChecksum(gps_string_in)) {
-                        parseNMEA_GGA(gps_string_in, &data);
+                        parseNMEA_GGA(gps_string_in, data);
                     }
                     string_idx = 0;
                 } else if (cur != '\r') {
