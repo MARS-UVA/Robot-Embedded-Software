@@ -22,15 +22,14 @@
   "idf.openOcdConfigs": [
     "board/esp32s3-builtin.cfg"
   ],
-  "idf.port": "detect",
-  "idf.currentSetup": "/Users/anthonyvu/.espressif/v6.0/esp-idf",
+  "idf.currentSetup": "C:\\esp\\v6.1-beta1\\esp-idf",
   "idf.customExtraVars": {
     "IDF_TARGET": "esp32s3"
   },
-  "clangd.path": "/Users/anthonyvu/.espressif/tools/esp-clang/esp-20.1.1_20250829/esp-clang/bin/clangd",
+  "clangd.path": "C:\\Espressif\\tools\\esp-clangd\\esp-21.1.3_20260408\\esp-clangd\\bin\\clangd.exe",
   "clangd.arguments": [
     "--background-index",
     "--query-driver=**",
-    "--compile-commands-dir=/Users/anthonyvu/Documents/GitHub/Robot Embedded Software/URC Main Body/build"
+    "--compile-commands-dir=c:\\Mars\\GNSSDriver\\build"
   ]
 }
