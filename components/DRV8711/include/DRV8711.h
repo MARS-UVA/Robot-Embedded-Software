@@ -1,5 +1,6 @@
 /**
  * @file DRV8711.h
+ * @author Cole Luba
  * @author Rishul Sharma
  * @author Josalin Wang
  * @brief Header file for DRV8711 driver.
@@ -10,6 +11,8 @@
 
  #pragma once
 
+ #include <stdbool.h>
+ #include "esp_err.h"
  #include "hal/gpio_types.h"
 
  typedef struct {
@@ -22,10 +25,17 @@
     gpio_num_t enable_pin;
     gpio_num_t fault_pin;
     gpio_num_t reset_pin;
+    gpio_num_t sleep_pin;
  } drv8711_config_t;
 
+ /**
+ * @brief Opaque handle for the DRV8711 driver.
+ */
  typedef struct drv8711_t *drv8711_handle_t;
 
+ /**
+ * @brief DRV8711 register addresses.
+ */
  typedef enum {
     HPSD_REG_CTRL   = 0x00,
     HPSD_REG_TORQUE = 0x01,
@@ -37,6 +47,9 @@
     HPSD_REG_STATUS = 0x07
 } drv8711_reg_addr_t;
 
+/**
+ * @brief DRV8711 step modes.
+ */
 typedef enum {
     MICROSTEP_1   = 0b0000, // Full-step (71% current)
     MICROSTEP_2   = 0b0001, // 1/2 step
@@ -48,3 +61,30 @@ typedef enum {
     MICROSTEP_128 = 0b0111, // 1/128 step
     MICROSTEP_256 = 0b1000  // 1/256 step
 } drv8711_step_mode_t;
+
+/**
+ * @brief Initializes the DRV8711 driver.
+ * 
+ * @param handle Pointer to a handle that will be initialized.
+ * @param config Pointer to a configuration structure.
+ * @return esp_err_t ESP_OK on success, or an error code on failure.
+ */
+esp_err_t drv8711_init(drv8711_handle_t *handle, const drv8711_config_t *config);
+
+/**
+ * @brief Steps the motor once.
+ * 
+ * @param handle Driver handle returned by drv8711_init().
+ * @return esp_err_t ESP_OK on success, or an error code on failure.
+ */
+esp_err_t step(drv8711_handle_t handle);
+
+/**
+ * @brief Sets the direction of the motor.
+ * 
+ * @param handle Driver handle returned by drv8711_init().
+ * @param dir Direction to set (true for one direction, false for the other).
+ * @return esp_err_t ESP_OK on success, or an error code on failure.
+ */
+esp_err_t setDirection(drv8711_handle_t handle, bool dir);
+
