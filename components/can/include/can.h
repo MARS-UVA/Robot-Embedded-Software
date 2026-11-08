@@ -1,34 +1,36 @@
-//allows file to be included only once
 #pragma once
 #include <stdint.h>
-#include <stdbool.h>        // bool types
-#include <esp_err.h>        // provides error types
-#include "hal/gpio_types.h" // gives gpio_num_t
+#include <stdbool.h>
+#include "esp_err.h"
+#include "hal/gpio_types.h"     // gpio_num_t
 
-typedef struct {
-    gpio_num_t  tx_gpio;            // TX GPIO Pin for CAN transciever
-    gpio_num_t  rx_gpio;            // RX GPIO Pin for CAN transciever
-    uint32_t    bitrate;            // agreed upon speed for CAN communication between devices on shared bus
-    uint32_t    tx_queue_depth;     // How deep you want a given transmission queue to be (how much space for queue)
-    uint32_t    rx_queue_depth;     // received frames that can wait to be processed
-    bool        self_test;          // test without ACK
-} CAN_config_t;
-
-#define CAN_TX_QUEUE_MAX    16          // largest allowed tx_queue_depth
-#define CAN_MAX_DATA_LEN    8           // maximum number bytes a frame can hold
+// ---------- Limits ----------
+#define CAN_MAX_DATA_LEN    8           // classic CAN carries at most 8 data bytes per frame
 #define CAN_STD_ID_MAX      0x7FF       // largest 11-bit standard ID
 #define CAN_EXT_ID_MAX      0x1FFFFFFF  // largest 29-bit extended ID
+#define CAN_TX_QUEUE_MAX    16          // largest allowed tx_queue_depth
+#define CAN_MAX_HANDLERS    16          // max number of CAN_register_handler() calls
 
+// ---------- Types ----------
+
+// Settings passed to CAN_init(). Board-specific values (pins) come from the project.
 typedef struct {
-    uint32_t    id;
-    bool        extended;
-    uint8_t     len;                        // how many bytes frame holds
+    gpio_num_t  tx_gpio;            // ESP32 pin wired to the transceiver's TX input
+    gpio_num_t  rx_gpio;            // ESP32 pin wired to the transceiver's RX output
+    uint32_t    bitrate;            // bits per second, must match every node on the bus
+    uint32_t    tx_queue_depth;     // frames that can wait to be sent (1 to CAN_TX_QUEUE_MAX)
+    uint32_t    rx_queue_depth;     // received frames that can wait to be processed
+    bool        self_test;          // loopback without needing an ACK, for single-board testing
+} CAN_config_t;
+
+// One CAN frame, independent of the underlying driver
+typedef struct {
+    uint32_t    id;                         // 11-bit or 29-bit identifier
+    bool        extended;                   // true = 29-bit ID, false = 11-bit ID
+    uint8_t     len;                        // number of valid bytes in data (0-8)
     uint8_t     data[CAN_MAX_DATA_LEN];
 } CAN_frame_t;
 
-#define CAN_MAX_HANDLERS 16     // max number of CAN_register_handler() calls
-
-// NOTE: refactor this, I think using this structure is inherently confusing to utilized (like its hard to read this)
 /**
  * @brief Function called when a received frame matches a registered ID/mask
  *
@@ -40,28 +42,31 @@ typedef struct {
  */
 typedef void (*CAN_handler_t)(const CAN_frame_t *frame, void *ctx);
 
+// Counters since CAN_init()
 typedef struct {
     uint32_t    tx_success;         // frames sent and acknowledged
     uint32_t    tx_failed;          // frames the hardware gave up on
     uint32_t    rx_received;        // frames received and queued for processing
     uint32_t    rx_dropped;         // frames lost because the rx queue was full
-    uint32_t    rx_unhandled;       // frames received that no handler had mactched
+    uint32_t    rx_unhandled;       // frames received that no handler matched
 } CAN_stats_t;
+
+// ---------- Functions ----------
 
 /**
  * @brief Create the CAN node with the given settings
  *
- * @note The node stays idle (not on the bus) until CAN_start() is called
- *
- * @note Received frames are processed by a background task created here
+ * @note The node stays idle (not on the bus) until CAN_start() is called.
+ *       Received frames are processed by a background task created here.
  *
  * @param config Pins, bitrate, TX/RX queue depths and self-test flag for the node
  *
  * @return
  *      - ESP_OK: Success
- *      - ESP_ERR_INVALID_ARG: config is NULL, bitrate, tx_queue_depth or rx_queue_depth is 0, or the driver rejected a setting (e.g. invalid pin)
+ *      - ESP_ERR_INVALID_ARG: config is NULL, bitrate is 0, a queue depth is 0,
+ *        tx_queue_depth > CAN_TX_QUEUE_MAX, or the driver rejected a setting (e.g. invalid pin)
  *      - ESP_ERR_INVALID_STATE: Node already initialized
- *      - ESP_ERR_NO_MEM: Not enough memory to create the node, queues or rx task
+ *      - ESP_ERR_NO_MEM: Not enough memory to create the node, rx queue or rx task
  *      - ESP_ERR_NOT_FOUND: No free TWAI controller
  */
 esp_err_t CAN_init(const CAN_config_t *config);

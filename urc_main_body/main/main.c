@@ -20,19 +20,6 @@
 
 static const char *TAG = "main";
 
-// static void on_test_node_counter(const CAN_frame_t *frame, void *ctx)
-// {
-//     if(frame->len < sizeof(uint32_t)) {
-//         return; // not the 4-byte this function expect (something is wrong) Investigate later if not working
-//     }
-
-//     uint32_t value = 0;
-//     // use memcpy with size included or else dangerous :)
-//     memcpy(&value, frame->data, sizeof(value));
-//     ESP_LOGI(TAG, "counter from 0x%03lx: %lu", frame->id, value);
-// }
-
-
 static void on_heartbeat(mc_node_t sender, const uint8_t *data, uint8_t len, void *ctx)
 {
     mc_heartbeat_t hb;
