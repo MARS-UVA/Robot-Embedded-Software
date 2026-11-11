@@ -47,6 +47,6 @@ dependencies:
     version: 6.1.0
 direct_dependencies:
 - espressif/bme280
-manifest_hash: 292976c10ed75ac65c01a63cc137a6ceb72f9ce04b75eaac39d269e2b1d1b3cb
+manifest_hash: 9007dcc66a1e9b36c78060529392439a816a5a95d0375970598ee85d4eb33a0f
 target: esp32s3
 version: 3.0.0

@@ -1,66 +1,165 @@
+/*
+ * BME280.c
+ *
+ * Implementation of the BME280 sensor module.
+ *
+ * Responsibilities:
+ *   1. Accept a pre-configured and active I2C master bus handle.
+ *   2. Create and initialize the BME280 device using the underlying component.
+ *   3. Safely manage and read environmental measurements.
+ *   4. Cleanly release sensor handles when the application is finished.
+ */
+
 #include "BME280_Sensor.h"
 #include "esp_log.h"
-#include "bme280.h"         // Espressif component library header
+#include "i2c_bus.h"
 
-static const char *TAG = "BME280_Driver";
-static bme280_handle_t sensor_handle = NULL;
-static bool sensor_ready = false;
+static const char *TAG = "BME280";
 
-bool network_bme280_init(int sda_pin, int scl_pin, uint8_t i2c_address) {
-    // 1. Setup the I2C Master Bus Configuration
-    i2c_master_bus_config_t bus_config = {
-        .i2c_port = I2C_NUM_0,
-        .sda_io_num = sda_pin,
-        .scl_io_num = scl_pin,
-        .clk_source = I2C_CLK_SRC_DEFAULT,
-        .glitch_ignore_cnt = 7,
-        .flags.enable_internal_pullup = true,
-    };
-    
-    i2c_master_bus_handle_t bus_handle;
-    if (i2c_new_master_bus(&bus_config, &bus_handle) != ESP_OK) {
-        ESP_LOGE(TAG, "Failed to initialize I2C Master Bus Context");
-        return false;
+/* These handles are private to this file. Other modules use the API functions
+ * rather than accessing the driver handles directly. */
+static i2c_bus_handle_t s_i2c_bus = NULL;
+static bme280_handle_t s_sensor = NULL;
+static bool s_initialized = false;
+static bme280_sensor_mode s_mode = BME280_MODE_NORMAL;
+
+esp_err_t bme280_sensor_init(i2c_bus_handle_t shared_bus, const bme280_sensor_config_t *config)
+{
+    if (shared_bus == NULL) {
+        ESP_LOGE(TAG, "Provided I2C bus handle is NULL. Initialize the bus first in app_main!");
+        return ESP_ERR_INVALID_ARG;
     }
 
-    // 2. Instantiate Espressif's BME280 Device Handle configuration
-    bme280_config_t sensor_config = {
-        .i2c_address = i2c_address,
-    };
-
-    if (bme280_create(bus_handle, &sensor_config, &sensor_handle) != ESP_OK) {
-        ESP_LOGE(TAG, "Failed to link Espressif BME280 Instance handle");
-        sensor_ready = false;
-        return false;
+    if (config == NULL) {
+        ESP_LOGE(TAG, "Configuration pointer is NULL");
+        return ESP_ERR_INVALID_ARG;
     }
 
-    ESP_LOGI(TAG, "BME280 Sensor Connected and Operational");
-    sensor_ready = true;
-    return true;
+    if (s_initialized) {
+        ESP_LOGW(TAG, "Sensor is already initialized");
+        return ESP_OK;
+    }
+
+    /* Validate sensor specific configurations */
+    if ((config->i2c_address != BME280_I2C_ADDR_PRIMARY &&
+         config->i2c_address != BME280_I2C_ADDR_SECONDARY) ||
+        (config->mode != BME280_MODE_NORMAL &&
+         config->mode != BME280_MODE_FORCED)) {
+        ESP_LOGE(TAG, "Invalid BME280 address or operational mode configured");
+        return ESP_ERR_INVALID_ARG;
+    }
+
+    /* Assign the active, shared I2C bus context */
+    s_i2c_bus = shared_bus;
+
+    /* Create the BME280 device handle on the running shared I2C bus. */
+    s_sensor = bme280_create(s_i2c_bus, config->i2c_address);
+    if (s_sensor == NULL) {
+        ESP_LOGE(TAG, "Could not create BME280 device handle on specified I2C bus");
+        s_i2c_bus = NULL;
+        return ESP_FAIL;
+    }
+
+    /* Check the chip ID, read calibration data, and perform standard initialization.
+     * This relies on the I2C master bus being fully active. */
+    esp_err_t err = bme280_default_init(s_sensor);
+    if (err != ESP_OK) {
+        ESP_LOGE(TAG, "BME280 default init failed. Verify wiring, address config, and pull-up resistors.");
+        bme280_delete(&s_sensor);
+        s_i2c_bus = NULL;
+        return err;
+    }
+
+    /* Apply the measurement options supplied by the application profile. */
+    err = bme280_set_sampling(
+        s_sensor,
+        config->mode,
+        config->temperature_sampling,
+        config->pressure_sampling,
+        config->humidity_sampling,
+        config->filter,
+        config->standby
+    );
+
+    if (err != ESP_OK) {
+        ESP_LOGE(TAG, "Could not apply BME280 sampling configuration");
+        bme280_delete(&s_sensor);
+        s_i2c_bus = NULL;
+        return err;
+    }
+
+    s_mode = config->mode;
+    s_initialized = true;
+    ESP_LOGI(TAG, "BME280 device successfully initialized on shared bus at address 0x%02X", config->i2c_address);
+
+    return ESP_OK;
 }
 
-void network_bme280_get_readings(bme280_data_t *out_data) {
-    if (!out_data) return;
-
-    if (!sensor_ready || sensor_handle == NULL) {
-        out_data->is_valid = false;
-        return;
+esp_err_t bme280_sensor_read(bme280_reading_t *reading)
+{
+    if (reading == NULL) {
+        return ESP_ERR_INVALID_ARG;
     }
 
-    // 3. Directly call the official Espressif retrieval macros
-    float temp = 0.0f, hum = 0.0f, pres = 0.0f;
+    /* Start with safe default values in case a read transaction fails. */
+    reading->temperature_c = 0.0f;
+    reading->humidity_pct = 0.0f;
+    reading->pressure_hpa = 0.0f;
+    reading->is_valid = false;
+
+    if (!s_initialized || s_sensor == NULL) {
+        ESP_LOGE(TAG, "Read requested before sensor initialization was successful");
+        return ESP_ERR_INVALID_STATE;
+    }
+
+    /* In forced mode, the sensor sleeps between measurements. Ask it to
+     * execute a fresh conversion before fetching the hardware registers. */
+    if (s_mode == BME280_MODE_FORCED) {
+        esp_err_t measure_err = bme280_take_forced_measurement(s_sensor);
+        if (measure_err != ESP_OK) {
+            ESP_LOGW(TAG, "Forced measurement request failed on I2C transaction");
+            return measure_err;
+        }
+    }
+
+    /* Read environmental data quantities from the BME280 registers. */
+    esp_err_t err = bme280_read_temperature(s_sensor, &reading->temperature_c);
+    if (err != ESP_OK) {
+        ESP_LOGW(TAG, "Temperature register read transaction failed");
+        return err;
+    }
+
+    err = bme280_read_humidity(s_sensor, &reading->humidity_pct);
+    if (err != ESP_OK) {
+        ESP_LOGW(TAG, "Humidity register read transaction failed");
+        return err;
+    }
+
+    /* Espressif's component automatically processes data into hPa. */
+    err = bme280_read_pressure(s_sensor, &reading->pressure_hpa);
+    if (err != ESP_OK) {
+        ESP_LOGW(TAG, "Pressure register read transaction failed");
+        return err;
+    }
+
+    reading->is_valid = true;
+    return ESP_OK;
+}
+
+esp_err_t bme280_sensor_deinit(void)
+{
+    esp_err_t result = ESP_OK;
+
+    if (s_sensor != NULL) {
+        result = bme280_delete(&s_sensor);
+    }
+
+    /* Cleared locally without deleting the parent I2C bus context, 
+     * since the lifecycle of the shared bus is managed externally. */
+    s_i2c_bus = NULL; 
+    s_initialized = false;
+    s_mode = BME280_MODE_NORMAL;
     
-    esp_err_t ret_t = bme280_read_temperature(sensor_handle, &temp);
-    esp_err_t ret_h = bme280_read_humidity(sensor_handle, &hum);
-    esp_err_t ret_p = bme280_read_pressure(sensor_handle, &pres);
-
-    if (ret_t == ESP_OK && ret_h == ESP_OK && ret_p == ESP_OK) {
-        out_data->temperature = temp;
-        out_data->humidity = hum;
-        out_data->pressure = pres / 100.0f; // Convert Pa to hPa
-        out_data->is_valid = true;
-    } else {
-        ESP_LOGE(TAG, "Failed to poll register bus telemetry from hardware target");
-        out_data->is_valid = false;
-    }
+    ESP_LOGI(TAG, "BME280 device sensor handles released smoothly");
+    return result;
 }
