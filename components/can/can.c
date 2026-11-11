@@ -1,3 +1,6 @@
+// Note that this code should not be modified for component dependent functionality
+// it serves a software layer between other compoenents and esspressif's twai library
+
 #include "can.h"
 #include <string.h>
 #include "freertos/FreeRTOS.h"
@@ -37,14 +40,14 @@ typedef struct {
 // ********** state **********
 
 // Node
-static twai_node_handle_t s_node = NULL;
-static bool s_started = false;
+static twai_node_handle_t s_node = NULL;    // keep a reference to the driver node (referenced for driver interaction)
+static bool s_started = false;              // true while CAN node is active on the bus
 
 // TX slot pool, statically allocated. s_tx_free holds pointers to slots not owned by the driver.
-static tx_slot_t s_tx_slots[CAN_TX_SLOT_MAX];
-static StaticQueue_t s_tx_free_buf;                                 // queue's bookkeeping
-static uint8_t s_tx_free_storage[CAN_TX_SLOT_MAX * sizeof(tx_slot_t *)];   // queue's item storage
-static QueueHandle_t s_tx_free = NULL;
+static tx_slot_t s_tx_slots[CAN_TX_SLOT_MAX];                               // buffer for actual frames wait until hardware can deliver them
+static StaticQueue_t s_tx_free_buf;                                         // FreeRTOS uses this for bookeeping calling xQueueCreateStatic
+static uint8_t s_tx_free_storage[CAN_TX_SLOT_MAX * sizeof(tx_slot_t *)];    // queue of free slot addresses
+static QueueHandle_t s_tx_free = NULL;                                      // the free list, CAN_send takes address from this, on_tx_done puts one back 
 static uint32_t s_tx_slot_count = 0;        // slots in use: tx_queue_depth + 1
 
 // RX: the ISR copies frames into the queue, the rx task dispatches them
@@ -92,6 +95,7 @@ static bool on_rx_done(twai_node_handle_t handle, const twai_rx_done_event_data_
         return false;
     }
 
+    // TODO figure out if this is needed
     // remote frames carry no data and aren't supported (the S3 can't filter them in hardware)
     if (rx.header.rtr) {
         return false;
@@ -107,7 +111,7 @@ static bool on_rx_done(twai_node_handle_t handle, const twai_rx_done_event_data_
     if (xQueueSendFromISR(s_rx_queue, &frame, &task_woken) == pdTRUE) {
         s_stats.rx_received++;
     } else {
-        s_stats.rx_dropped++;       // rx task is falling behind
+        s_stats.rx_dropped++;       // rx task was dropped
     }
     return task_woken == pdTRUE;    // tells the driver to switch to the rx task right away
 }

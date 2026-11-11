@@ -57,13 +57,6 @@ void app_main(void)
     ESP_ERROR_CHECK(CAN_start());
 
     uint32_t seq = 0;
-    // send a counter once a second, frames from the other board are printed by the CAN rx task
-    // CAN_frame_t frame = {
-    //     .id = TEST_FRAME_ID,
-    //     .extended = false,
-    //     .len = sizeof(uint32_t),
-    // };
-    // uint32_t counter = 0;
 
     while (1) {
         mc_heartbeat_t hb = { .uptime_ms = (uint32_t)(esp_timer_get_time() / 1000) };
