@@ -307,6 +307,7 @@ esp_err_t CAN_send(const CAN_frame_t *frame, int timeout_ms)
         },
         .buffer = slot->data,
         .buffer_len = frame->len,
+        .priority = frame->priority,
     };
 
     // timeout 0: there are never more slots than the driver queue holds, so it can't be full

@@ -28,6 +28,7 @@ typedef struct {
     uint32_t    id;                         // 11-bit or 29-bit identifier
     bool        extended;                   // true = 29-bit ID, false = 11-bit ID
     uint8_t     len;                        // number of valid bytes in data (0-8)
+    uint8_t     priority;                   // priority for TX only: 0 = normal, higher = sent sooner (0-255)
     uint8_t     data[CAN_MAX_DATA_LEN];
 } CAN_frame_t;
 
