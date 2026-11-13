@@ -41,6 +41,7 @@ static void mc_can_handler(const CAN_frame_t *frame, void *ctx)
 //         ESP_LOGW(TAG, "pong to node %d failed: %s", sender, esp_err_to_name(err));
 //     }
 // }
+static void mc_on_ping(mc_node_t sender, const uint8_t *data, uint8_t len, void *ctx);
 
 esp_err_t module_com_init(mc_node_t my_node)
 {
