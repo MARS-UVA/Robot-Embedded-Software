@@ -43,3 +43,5 @@ typedef struct {
 esp_err_t maxm10s_init(maxm10s_config_t *config, maxm10s_dev_handle_t *dev_handle);
 
 esp_err_t maxm10s_read(maxm10s_dev_handle_t *dev_handle, maxm10s_data_t *data);
+
+void printMax10sData(maxm10s_data_t GGA_data);
