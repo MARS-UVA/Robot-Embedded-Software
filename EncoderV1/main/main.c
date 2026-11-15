@@ -1,26 +1,27 @@
 #include <stdio.h>
 #include <stddef.h>
+#include "../../components/rev_v2_encoder/include/rev_v2_encoder.h"
 #include "driver/gpio.h"
 #include "driver/mcpwm_cap.h"
 #include "esp_err.h"
 #include "freertos/FreeRTOS.h"
-
-
+/*
+//This should be able to go in the header
 #define PUSLE_RESOLUTION 4096
 #define PWM_IN 6
 #define PULSE_MIN_US   3.884
 #define PULSE_MAX_US   998.06
-
+//""
 mcpwm_cap_channel_handle_t chan;
 mcpwm_cap_timer_handle_t timer;
 uint32_t out_res_hz;
 uint32_t cur;
 uint32_t rise_edge_time;
-bool rise_edge_exist = false;
+bool rise_edge_exist = false; //defined
 uint32_t period_ticks;
 uint32_t high_ticks;
 
-
+//Declare this
 double pulse_to_angle(double pulse_us)
 {
     double angle = (pulse_us - PULSE_MIN_US) * 360.0 / (PULSE_MAX_US - PULSE_MIN_US);
@@ -32,7 +33,7 @@ double pulse_to_angle(double pulse_us)
     } 
     return angle;
 }
-
+//Declare this
 bool IRAM_ATTR on_capture(mcpwm_cap_channel_handle_t chan, const mcpwm_capture_event_data_t *edata, void *user_data) {
     cur = edata->cap_value;
 
@@ -46,7 +47,8 @@ bool IRAM_ATTR on_capture(mcpwm_cap_channel_handle_t chan, const mcpwm_capture_e
         high_ticks = cur - rise_edge_time;
     }
     return false;;
-}
+} 
+//Declare this 
 void mcpwm_init(void) {
     mcpwm_capture_timer_config_t config_timer = {
         .group_id = 0,
@@ -61,7 +63,7 @@ void mcpwm_init(void) {
             .neg_edge = true,
         }
     };
-
+    //This needs commenting
     ESP_ERROR_CHECK(mcpwm_new_capture_timer(&config_timer, &timer));
     ESP_ERROR_CHECK(mcpwm_capture_timer_get_resolution(timer, &out_res_hz));
     ESP_ERROR_CHECK(mcpwm_new_capture_channel(timer, &config_chan, &chan));
@@ -71,10 +73,13 @@ void mcpwm_init(void) {
     ESP_ERROR_CHECK(mcpwm_capture_timer_enable(timer));
     ESP_ERROR_CHECK(mcpwm_capture_timer_start(timer));
 }
-
+*/
 void app_main(void)
 {
-    mcpwm_init();
+    rev_v2_encoder_handle_t handle;
+    rev_v2_encoder_init(&handle, GPIO_NUM_6);
+
+    /**mcpwm_init();
 
 
     while (1) {
@@ -89,6 +94,11 @@ void app_main(void)
         } else {
             printf("No signal\n");
         }
+        vTaskDelay(pdMS_TO_TICKS(100));
+    }**/
+
+    while (1) {
+        rev_v2_encoder_read(handle);
         vTaskDelay(pdMS_TO_TICKS(100));
     }
 
