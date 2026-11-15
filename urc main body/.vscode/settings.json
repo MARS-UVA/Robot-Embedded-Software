@@ -22,8 +22,8 @@
   "idf.openOcdConfigs": [
     "board/esp32s3-builtin.cfg"
   ],
-  "idf.port": "/dev/tty.usbmodem101",
-  "idf.currentSetup": "/Users/coleluba/esp/esp-idf",
+  "idf.port": "/dev/tty.usbmodem1101",
+  "idf.currentSetup": "/Users/anthonyvu/.espressif/v6.0/esp-idf",
   "idf.customExtraVars": {
     "IDF_TARGET": "esp32s3"
   },
@@ -33,6 +33,6 @@
     "--query-driver=**",
     "--compile-commands-dir=/Users/anthonyvu/Documents/GitHub/Robot Embedded Software/URC Main Body/build"
   ],
-  "idf.monitorPort": "/dev/tty.usbmodem101",
+  "idf.monitorPort": "/dev/tty.usbmodem1101",
   "idf.flashType": "UART"
 }

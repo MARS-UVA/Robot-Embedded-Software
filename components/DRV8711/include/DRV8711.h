@@ -11,21 +11,19 @@
 
  #pragma once
 
- #include <stdbool.h>
  #include "esp_err.h"
  #include "hal/gpio_types.h"
+ #include "driver/spi_master.h"
 
  typedef struct {
     gpio_num_t spi_cs_pin;
-    gpio_num_t spi_clk_pin;
-    gpio_num_t spi_mosi_pin;
-    gpio_num_t spi_miso_pin;
     gpio_num_t step_pin;
     gpio_num_t dir_pin;
     gpio_num_t enable_pin;
     gpio_num_t fault_pin;
     gpio_num_t reset_pin;
     gpio_num_t sleep_pin;
+    spi_host_device_t spi_host;
  } drv8711_config_t;
 
  /**
@@ -69,7 +67,16 @@ typedef enum {
  * @param config Pointer to a configuration structure.
  * @return esp_err_t ESP_OK on success, or an error code on failure.
  */
-esp_err_t drv8711_init(drv8711_handle_t *handle, const drv8711_config_t *config);
+esp_err_t drv8711_init(drv8711_handle_t *handle,
+                       const drv8711_config_t *config);
+
+/**
+ * @brief Deinitializes the DRV8711 driver.
+ * 
+ * @param handle Driver handle returned by drv8711_init().
+ * @return esp_err_t ESP_OK on success, or an error code on failure.
+ */
+esp_err_t drv8711_deinit(drv8711_handle_t handle);
 
 /**
  * @brief Steps the motor once.
@@ -77,7 +84,7 @@ esp_err_t drv8711_init(drv8711_handle_t *handle, const drv8711_config_t *config)
  * @param handle Driver handle returned by drv8711_init().
  * @return esp_err_t ESP_OK on success, or an error code on failure.
  */
-esp_err_t step(drv8711_handle_t handle);
+esp_err_t drv8711_step(drv8711_handle_t handle);
 
 /**
  * @brief Sets the direction of the motor.
@@ -86,5 +93,4 @@ esp_err_t step(drv8711_handle_t handle);
  * @param dir Direction to set (true for one direction, false for the other).
  * @return esp_err_t ESP_OK on success, or an error code on failure.
  */
-esp_err_t setDirection(drv8711_handle_t handle, bool dir);
-
+esp_err_t drv8711_set_dir(drv8711_handle_t handle, bool dir);
