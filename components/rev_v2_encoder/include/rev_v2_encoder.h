@@ -30,7 +30,7 @@ typedef struct rev_v2_encoder_t *rev_v2_encoder_handle_t;
 
 esp_err_t rev_v2_encoder_init(rev_v2_encoder_handle_t *handle, gpio_num_t input_pin);
 
-esp_err_t rev_v2_encoder_read(rev_v2_encoder_handle_t handle);
+esp_err_t rev_v2_encoder_read(rev_v2_encoder_handle_t handle, double *ret_angle);
 
 esp_err_t rev_v2_encoder_deinit(rev_v2_encoder_handle_t handle);
 

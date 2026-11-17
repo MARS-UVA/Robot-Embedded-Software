@@ -35,7 +35,7 @@ bool IRAM_ATTR on_capture(mcpwm_cap_channel_handle_t chan, const mcpwm_capture_e
         handle->rise_edge_time = cur;
         handle->rise_edge_exist = true;
     } else if (handle->rise_edge_exist) {
-        handle->high_ticks = - cur - handle->rise_edge_time;
+        handle->high_ticks = cur - handle->rise_edge_time;
         handle->rise_edge_exist = false;
     }
     return false;
@@ -87,10 +87,13 @@ esp_err_t rev_v2_encoder_init(rev_v2_encoder_handle_t *handle, gpio_num_t input_
     }
     dev->rise_edge_exist = false;
     // Define the callback structure, assigning 'on_capture' to run when a signal event occurs(TBD)
-    mcpwm_capture_event_callbacks_t cbs = { .on_cap = on_capture };
+    mcpwm_capture_event_callbacks_t cbs = {
+        .on_cap = on_capture
+    };
     
     // Register the event callback function with the capture channel(TBD)
-    err = mcpwm_capture_channel_register_event_callbacks(chan, &cbs, (void *)handle);
+    err = mcpwm_capture_channel_register_event_callbacks(chan, &cbs, dev);
+    //err = mcpwm_capture_channel_register_event_callbacks(chan, &cbs, (void *)handle);
     if (err != ESP_OK) {
         goto fail;
     }
@@ -130,8 +133,10 @@ esp_err_t rev_v2_encoder_deinit(rev_v2_encoder_handle_t handle) {
     if (handle == NULL) {
         return ESP_ERR_INVALID_ARG;
     }
-
-    esp_err_t err = mcpwm_capture_channel_register_event_callbacks(handle->chan, NULL, handle);
+    mcpwm_capture_event_callbacks_t cbs = {
+        .on_cap = NULL
+    };
+    esp_err_t err = mcpwm_capture_channel_register_event_callbacks(handle->chan, &cbs, NULL);
     if (err != ESP_OK) {
         return err;
     }
@@ -140,7 +145,7 @@ esp_err_t rev_v2_encoder_deinit(rev_v2_encoder_handle_t handle) {
     return ESP_OK;
 }
 
-esp_err_t rev_v2_encoder_read(rev_v2_encoder_handle_t handle) {
+esp_err_t rev_v2_encoder_read(rev_v2_encoder_handle_t handle, double *ret_angle) {
     if (handle == NULL) {
         return ESP_ERR_INVALID_ARG;
     }
@@ -152,6 +157,7 @@ esp_err_t rev_v2_encoder_read(rev_v2_encoder_handle_t handle) {
             handle->angle = s_rev_v2_encoder_pulse_to_angle(pulse_us);
 
             printf("Freq: %.2f Hz, Pulse: %.3f \u00B5s, Angle: %.2f deg\n",(double)handle->res_hz / PERIOD_HZ, pulse_us, handle->angle);
+            *ret_angle = handle->angle;
                 
     } else {
             ESP_LOGI(TAG, "No Input Detected");
