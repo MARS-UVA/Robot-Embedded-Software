@@ -1,70 +1,130 @@
-#include <string.h>
+#include <stdio.h>
+#include <string.h> 
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
 #include "esp_log.h"
 #include "esp_timer.h"
 #include "module_com.h"
 #include "can.h"
+#include "TB6612FNG.h"
+#include <time.h>
 
-// use this to toggle on or off the logg messeges (TODO: not implemented)
-// plan to use if def or possibly levels of debug modes
-#define DEBUG_MODE true
+#define IN1 GPIO_NUM_1
+#define IN2 GPIO_NUM_2
+#define PWM GPIO_NUM_4
+#define STBY GPIO_NUM_5
 
-// Placeholder pins until the transceiver wiring is decided
-#define CAN_TX_GPIO     4
-#define CAN_RX_GPIO     5
-#define CAN_BITRATE     500000      // must match every other node on the bus
-#define CAN_SELF_TEST   false       // true = single board loopback, false = real bus with another node
-
-#define MY_NODE MC_NODE_MAIN_BODY
-
-static const char *TAG = "main";
-
-static void on_heartbeat(mc_node_t sender, const uint8_t *data, uint8_t len, void *ctx)
-{
-    mc_heartbeat_t hb;
-    if (len != sizeof(hb)) {return;} // lengths do not match --> INVALID!!
-    memcpy(&hb, data, sizeof(hb));
-    ESP_LOGI(TAG, "heartbeat from node %d: up %lu ms", sender, hb.uptime_ms);
-}
-
-// acknowledge event
-static void on_pong(mc_node_t sender, const uint8_t *data, uint8_t len, void *ctx)
-{
-    mc_ping_t pong;
-    if (len != sizeof(pong)) {return;} // double check for correct length (verify this wont possibly cause silent failure)
-    memcpy(&pong, data, sizeof(pong));
-    uint32_t rtt_us = (uint32_t)esp_timer_get_time() - pong.sent_us; 
-    ESP_LOGI(TAG, "pong #%lu from node %d: round trip %lu us", pong.seq, sender, rtt_us);
+void delay_seconds(unsigned int secs) {
+    unsigned int end_time = time(NULL) + secs;
+    while (time(NULL) < end_time) {
+        // busy-wait loop
+    }
 }
 
 void app_main(void)
 {
-    CAN_config_t can_cfg = {
-        .tx_gpio = CAN_TX_GPIO,
-        .rx_gpio = CAN_SELF_TEST ? CAN_TX_GPIO : CAN_RX_GPIO,
-        .bitrate = CAN_BITRATE,
-        .tx_queue_depth = 10,
-        .rx_queue_depth = 10,
-        .self_test = CAN_SELF_TEST,
+
+    // Setting up
+    tb6612fng_config_t tb6612fng_config = {0};
+    tb6612fng_config.extend_pin = IN1;
+    tb6612fng_config.retract_pin = IN2;
+    tb6612fng_config.pwm_pin = PWM;
+
+    tb6612fng_handle_t handle;
+
+    tb6612fng_init(&handle, &tb6612fng_config);
+
+    while(true) {
+        tb6612fng_drive(handle, 128, true);
+        vTaskDelay(pdMS_TO_TICKS(3000));
+        tb6612fng_drive(handle, 128, false);
+        vTaskDelay(pdMS_TO_TICKS(3000));
+    }
+}
+
+
+/*
+
+static const char *TAG = "ACTUATOR";
+
+
+// ESP32-S3 GPIO assignments
+#define ACTUATOR_AIN1 GPIO_NUM_1
+#define ACTUATOR_AIN2 GPIO_NUM_2
+#define ACTUATOR_PWM  GPIO_NUM_4
+#define ACTUATOR_STBY GPIO_NUM_5
+
+
+void app_main(void)
+{
+    ESP_LOGI(TAG, "Starting linear actuator driver...");
+
+
+    // Configure the TB6612FNG pins and PWM.
+    tb6612fng_config_t actuator_config = {
+        .ain1_pin = ACTUATOR_AIN1,
+        .ain2_pin = ACTUATOR_AIN2,
+        .pwm_pin = ACTUATOR_PWM,
+        .stby_pin = ACTUATOR_STBY,
+
+        .pwm_channel = LEDC_CHANNEL_0,
+        .pwm_timer = LEDC_TIMER_0
     };
 
-    // order: CAN init --> module_com init + registrations --> CAN start
-    ESP_ERROR_CHECK(CAN_init(&can_cfg));
-    ESP_ERROR_CHECK(module_com_init(MY_NODE));
-    ESP_ERROR_CHECK(module_com_on(MC_MSG_HEARTBEAT, on_heartbeat, NULL));
-    ESP_ERROR_CHECK(module_com_on(MC_MSG_PONG, on_pong, NULL));
-    ESP_ERROR_CHECK(CAN_start());
 
-    uint32_t seq = 0;
+    // Create the driver handle.
+    tb6612fng_handle_t actuator = NULL;
 
-    while (1) {
-        mc_heartbeat_t hb = { .uptime_ms = (uint32_t)(esp_timer_get_time() / 1000) };
-        module_com_send(MC_MSG_HEARTBEAT, &hb, sizeof(hb));
 
-        mc_ping_t ping = { .seq = seq++, .sent_us = (uint32_t)esp_timer_get_time() };
-        module_com_send(MC_MSG_PING, &ping, sizeof(ping));
+    // Initialize the driver.
+    esp_err_t err = tb6612fng_init(
+        &actuator,
+        &actuator_config
+    );
 
+    if (err != ESP_OK)
+    {
+        ESP_LOGE(TAG, "Initialization failed: %s",
+                 esp_err_to_name(err));
+        return;
+    }
+
+    ESP_LOGI(TAG, "Driver initialized successfully.");
+
+
+    // Enable the motor driver.
+    err = tb6612fng_enable(actuator, true);
+
+    if (err != ESP_OK)
+    {
+        ESP_LOGE(TAG, "Failed to enable driver.");
+        return;
+    }
+
+
+    ESP_LOGI(TAG, "Actuator ready.");
+
+
+    // TEST COMMANDS
+    // Leave these commented until you're ready to test.
+
+    // Extend:
+    // tb6612fng_drive(actuator, 150, true);
+
+    // Retract:
+    // tb6612fng_drive(actuator, 150, false);
+
+    // Stop:
+    // tb6612fng_stop(actuator);
+
+
+    // Keep the actuator stopped.
+    tb6612fng_stop(actuator);
+
+    while (1)
+    {
         vTaskDelay(pdMS_TO_TICKS(1000));
     }
 }
+
+*/
