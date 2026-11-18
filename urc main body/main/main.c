@@ -2,6 +2,8 @@
 #include "DRV8711.h"
 #include "hal/gpio_types.h"
 #include "freertos/FreeRTOS.h"
+#include "esp_rom_sys.h"
+#include "stdbool.h"
 
 void app_main(void)
 {
@@ -30,6 +32,5 @@ void app_main(void)
         printf("running task \n");
         drv8711_step(handle);
         esp_rom_delay_us(100);
-        vTaskDelay(1);
     }
 }

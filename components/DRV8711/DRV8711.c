@@ -26,7 +26,6 @@
 struct drv8711_t {
     gpio_num_t step_pin;
     gpio_num_t dir_pin;
-    gpio_num_t enable_pin;
     gpio_num_t fault_pin;
     gpio_num_t reset_pin;
     gpio_num_t sleep_pin;
@@ -61,7 +60,6 @@ esp_err_t drv8711_init(drv8711_handle_t *handle, const drv8711_config_t *config)
     }
     dev->step_pin   = config->step_pin;
     dev->dir_pin    = config->dir_pin;
-    dev->enable_pin = config->enable_pin;
     dev->fault_pin  = config->fault_pin;
     dev->reset_pin  = config->reset_pin;
     dev->sleep_pin  = config->sleep_pin;
@@ -85,6 +83,10 @@ esp_err_t drv8711_init(drv8711_handle_t *handle, const drv8711_config_t *config)
     gpio_set_level(dev->step_pin, 0);
     gpio_set_level(dev->dir_pin, 0);
 
+    // Wake (sleep high)
+    gpio_set_level(dev->sleep_pin, 1);
+    vTaskDelay(pdMS_TO_TICKS(5));
+
     // Pulse RESET (active high)
     gpio_set_level(dev->reset_pin, 1);
     vTaskDelay(pdMS_TO_TICKS(1));
@@ -102,10 +104,6 @@ esp_err_t drv8711_init(drv8711_handle_t *handle, const drv8711_config_t *config)
     if (err != ESP_OK) {
         goto fail;
     }
-
-    // Wake the driver (nSLEEP high)
-    gpio_set_level(dev->sleep_pin, 1);
-    vTaskDelay(pdMS_TO_TICKS(5));
 
     err = drv8711_write_register(dev, HPSD_REG_CTRL, 0x0C11);
     if (err != ESP_OK) {
