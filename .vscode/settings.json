@@ -1,6 +1,6 @@
 {
-    "cmake.sourceDirectory": "C:/Users/hairy/MARS/Robot-Embedded-Software/EncoderV1",
-    "idf.currentSetup": "C:\\esp\\v6.1\\esp-idf",
+    "cmake.sourceDirectory": "/Users/anthonyvu/Documents/GitHub/Robot-Embedded-Software/EncoderV1",
+    "idf.currentSetup": "/Users/anthonyvu/.espressif/v6.0/esp-idf",
     "idf.port": "COM7",
     "idf.openOcdConfigs": [
         "board/esp32s3-builtin.cfg"

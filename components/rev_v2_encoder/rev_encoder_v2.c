@@ -1,9 +1,21 @@
+/**
+ * @file rev_encoder_v2.c
+ * @author Quintin Levy
+ * @author Rishul Sharma
+ * @author Isaiah Thornsley
+ * @author Anthony Vu
+ * @brief Source file for the REV Robotics V2 Encoder driver.
+ * @version 1.0
+ * 
+ * @details This file contains the implementation of the functions for the REV Robotics Encoder driver.
+ */
+
 #include <stdio.h>
-#include "rev_v2_encoder.h"
+#include "rev_encoder_v2.h"
 #include "esp_err.h"
 #include "esp_log.h"
 
-static const char *TAG = "rev_v2_encoder";
+static const char *TAG = "rev_encoder_v2";
 
 struct rev_v2_encoder_t {
     mcpwm_cap_channel_handle_t chan;
@@ -15,7 +27,7 @@ struct rev_v2_encoder_t {
     uint32_t res_hz;
 };
 
-static double s_rev_v2_encoder_pulse_to_angle(double pulse_us)
+static double s_rev_encoder_v2_pulse_to_angle(double pulse_us)
 {
     double angle = (pulse_us - PULSE_MIN_US) * 360.0 / (PULSE_MAX_US - PULSE_MIN_US);
     if (angle < 0.0) {
@@ -27,7 +39,7 @@ static double s_rev_v2_encoder_pulse_to_angle(double pulse_us)
     return angle;
 }
 
-bool IRAM_ATTR on_capture(mcpwm_cap_channel_handle_t chan, const mcpwm_capture_event_data_t *edata, void *user_data) {
+static bool IRAM_ATTR s_rev_encoder_v2_on_capture(mcpwm_cap_channel_handle_t chan, const mcpwm_capture_event_data_t *edata, void *user_data) {
     uint32_t cur = edata->cap_value;
     rev_v2_encoder_handle_t handle = (rev_v2_encoder_handle_t) user_data;
 
@@ -42,12 +54,12 @@ bool IRAM_ATTR on_capture(mcpwm_cap_channel_handle_t chan, const mcpwm_capture_e
 } 
 
 
-esp_err_t rev_v2_encoder_init(rev_v2_encoder_handle_t *handle, gpio_num_t input_pin) {
+esp_err_t rev_encoder_v2_init(rev_encoder_v2_handle_t *handle, gpio_num_t input_pin) {
     if (handle == NULL) {
         return ESP_ERR_INVALID_ARG;
     }
     
-    rev_v2_encoder_handle_t dev = calloc(1, sizeof(struct rev_v2_encoder_t));
+    rev_encoder_v2_handle_t dev = calloc(1, sizeof(struct rev_encoder_v2_t));
     if (dev == NULL) {
         return ESP_ERR_NO_MEM;
     }
@@ -129,7 +141,7 @@ esp_err_t rev_v2_encoder_init(rev_v2_encoder_handle_t *handle, gpio_num_t input_
         return err;
 }
 
-esp_err_t rev_v2_encoder_deinit(rev_v2_encoder_handle_t handle) {
+esp_err_t rev_encoder_v2_deinit(rev_encoder_v2_handle_t handle) {
     if (handle == NULL) {
         return ESP_ERR_INVALID_ARG;
     }
@@ -145,7 +157,7 @@ esp_err_t rev_v2_encoder_deinit(rev_v2_encoder_handle_t handle) {
     return ESP_OK;
 }
 
-esp_err_t rev_v2_encoder_read(rev_v2_encoder_handle_t handle, double *ret_angle) {
+esp_err_t rev_encoder_v2_read(rev_encoder_v2_handle_t handle, double *ret_angle) {
     if (handle == NULL) {
         return ESP_ERR_INVALID_ARG;
     }
@@ -154,7 +166,7 @@ esp_err_t rev_v2_encoder_read(rev_v2_encoder_handle_t handle, double *ret_angle)
     if (handle->high_ticks > 0) {
             double pulse_us = (double)handle->high_ticks * 1e6 / handle->res_hz;
 
-            handle->angle = s_rev_v2_encoder_pulse_to_angle(pulse_us);
+            handle->angle = s_rev_encoder_v2_pulse_to_angle(pulse_us);
 
             printf("Freq: %.2f Hz, Pulse: %.3f \u00B5s, Angle: %.2f deg\n",(double)handle->res_hz / PERIOD_HZ, pulse_us, handle->angle);
             *ret_angle = handle->angle;
