@@ -1,0 +1,16 @@
+{
+    "cmake.sourceDirectory": "/Users/anthonyvu/Documents/GitHub/Robot-Embedded-Software/EncoderV1",
+    "idf.currentSetup": "/Users/anthonyvu/.espressif/v6.0/esp-idf",
+    "idf.port": "COM7",
+    "idf.openOcdConfigs": [
+        "board/esp32s3-builtin.cfg"
+    ],
+    "idf.customExtraVars": {},
+    "clangd.path": "C:\\Espressif\\tools\\esp-clangd\\esp-21.1.3_20260408\\esp-clangd\\bin\\clangd.exe",
+    "clangd.arguments": [
+      "--background-index",
+      "--query-driver=**",
+      "--compile-commands-dir=c:\\Users\\hairy\\MARS\\Robot-Embedded-Software\\build"
+    ],
+    "idf.flashType": "JTAG"
+}
