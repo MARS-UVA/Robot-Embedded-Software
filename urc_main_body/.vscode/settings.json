@@ -22,17 +22,17 @@
   "idf.openOcdConfigs": [
     "board/esp32s3-builtin.cfg"
   ],
-  "idf.port": "/dev/tty.usbserial-110",
-  "idf.currentSetup": "/Users/randyluong/.espressif/v6.1/esp-idf",
+  "idf.port": "COM14",
+  "idf.currentSetup": "C:\\esp\\v6.0.1\\esp-idf",
   "idf.customExtraVars": {
     "IDF_TARGET": "esp32s3"
   },
-  "clangd.path": "/Users/anthonyvu/.espressif/tools/esp-clang/esp-20.1.1_20250829/esp-clang/bin/clangd",
+  "clangd.path": "C:\\Espressif\\tools\\esp-clang\\esp-20.1.1_20250829\\esp-clang\\bin\\clangd.exe",
   "clangd.arguments": [
     "--background-index",
     "--query-driver=**",
-    "--compile-commands-dir=/Users/anthonyvu/Documents/GitHub/Robot Embedded Software/URC Main Body/build"
+    "--compile-commands-dir=c:\\Users\\bw15s\\Documents\\GitHub\\Robot-Embedded-Software\\urc_main_body\\build"
   ],
-  "idf.monitorPort": "/dev/tty.usbserial-110",
+  "idf.monitorPort": "COM14",
   "idf.flashType": "UART"
 }

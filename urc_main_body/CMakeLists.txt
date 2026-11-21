@@ -4,5 +4,7 @@ cmake_minimum_required(VERSION 3.22)
 
 # path is relative to this file, so it works no matter where the build is run from
 set(EXTRA_COMPONENT_DIRS "${CMAKE_CURRENT_LIST_DIR}/../components")
+set(COMPONENTS main TB6612FNG)
+
 include($ENV{IDF_PATH}/tools/cmake/project.cmake)
 project(URC_Main_Body)

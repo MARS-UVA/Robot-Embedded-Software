@@ -4,8 +4,6 @@
 #include "freertos/task.h"
 #include "esp_log.h"
 #include "esp_timer.h"
-#include "module_com.h"
-#include "can.h"
 #include "TB6612FNG.h"
 #include <time.h>
 
@@ -14,31 +12,40 @@
 #define PWM GPIO_NUM_4
 #define STBY GPIO_NUM_5
 
-void delay_seconds(unsigned int secs) {
-    unsigned int end_time = time(NULL) + secs;
-    while (time(NULL) < end_time) {
-        // busy-wait loop
-    }
-}
-
 void app_main(void)
 {
 
     // Setting up
-    tb6612fng_config_t tb6612fng_config = {0};
-    tb6612fng_config.extend_pin = IN1;
-    tb6612fng_config.retract_pin = IN2;
-    tb6612fng_config.pwm_pin = PWM;
+    tb6612fng_config_t tb6612fng_config = {
+        .extend_pin = IN1,
+        .retract_pin = IN2,
+        .pwm_pin = PWM,
+        .standby_pin = STBY,
+        .channel = LEDC_CHANNEL_0
+    };
 
     tb6612fng_handle_t handle;
 
     tb6612fng_init(&handle, &tb6612fng_config);
 
     while(true) {
-        tb6612fng_drive(handle, 128, true);
-        vTaskDelay(pdMS_TO_TICKS(3000));
-        tb6612fng_drive(handle, 128, false);
-        vTaskDelay(pdMS_TO_TICKS(3000));
+        ESP_LOGI("LINEAR", "Extending");
+        ESP_ERROR_CHECK(tb6612fng_drive(handle, 255, true));
+        vTaskDelay(pdMS_TO_TICKS(10000));
+
+        // Stop/coast briefly before reversing
+        ESP_ERROR_CHECK(gpio_set_level(IN1, 0));
+        ESP_ERROR_CHECK(gpio_set_level(IN2, 0));
+        vTaskDelay(pdMS_TO_TICKS(1000));
+
+        ESP_LOGI("LINEAR", "Retracting");
+        ESP_ERROR_CHECK(tb6612fng_drive(handle, 255, false));
+        vTaskDelay(pdMS_TO_TICKS(10000));
+
+        // Stop/coast briefly before reversing
+        ESP_ERROR_CHECK(gpio_set_level(IN1, 0));
+        ESP_ERROR_CHECK(gpio_set_level(IN2, 0));
+        vTaskDelay(pdMS_TO_TICKS(1000));
     }
 }
 
