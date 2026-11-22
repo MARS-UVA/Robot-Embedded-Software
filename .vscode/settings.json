@@ -1,5 +1,5 @@
 {
-    "cmake.sourceDirectory": "/Users/anthonyvu/Documents/GitHub/Robot-Embedded-Software/EncoderV1",
+    "cmake.sourceDirectory": "/Users/anthonyvu/Documents/GitHub/Robot-Embedded-Software/can_test_node",
     "idf.currentSetup": "/Users/anthonyvu/.espressif/v6.0/esp-idf",
     "idf.port": "COM7",
     "idf.openOcdConfigs": [
