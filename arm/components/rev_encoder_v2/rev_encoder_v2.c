@@ -119,7 +119,7 @@ esp_err_t rev_encoder_v2_init(rev_encoder_v2_handle_t *handle, rev_encoder_v2_co
         return err;
 }
 
-esp_err_t rev_encoder_v2_destroy(rev_encoder_v2_handle_t handle) {
+esp_err_t rev_encoder_v2_deinit(rev_encoder_v2_handle_t handle) {
     if (handle == NULL) {
         return ESP_ERR_INVALID_ARG;
     }

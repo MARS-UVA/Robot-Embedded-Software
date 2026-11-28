@@ -43,7 +43,7 @@ esp_err_t rev_encoder_v2_init(rev_encoder_v2_handle_t *handle, rev_encoder_v2_co
  * @param handle[in] Encoder handle to deinitialize.
  * @return ESP_OK if successful, otherwise an error code.
  */
-esp_err_t rev_encoder_v2_destroy(rev_encoder_v2_handle_t handle);
+esp_err_t rev_encoder_v2_deinit(rev_encoder_v2_handle_t handle);
 
 /**
  * @brief Read the angle from the REV Robotics Through Bore Encoder V2.
