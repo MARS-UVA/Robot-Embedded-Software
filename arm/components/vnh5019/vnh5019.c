@@ -6,6 +6,9 @@ static const char *TAG = "vnh5019";
 struct vnh5019_t {
     gpio_num_t ina;
     gpio_num_t inb;
+    gpio_num_t cs;
+    gpio_num_t enadiaga;
+    gpio_num_t enbdiagb;
     
     ledc_channel_t channel;
     ledc_mode_t speed_mode; /**< LEDC channel mode, LEDC_HIGH_SPEED_MODE is only available for the ESP32 */
@@ -121,6 +124,7 @@ esp_err_t vnh5019_set_output(vnh5019_handle_t handle, float duty_cycle)
         ESP_RETURN_ON_ERROR(gpio_set_level(handle->inb, 1), TAG, "Failed to set GPIO level for pin %d", handle->inb);
     }
     ESP_RETURN_ON_ERROR(ledc_set_duty_and_update(handle->speed_mode, handle->channel, (uint32_t)(duty_cycle * ((1 << handle->duty_resolution) - 1)), 0), TAG, "Failed to set duty and update for channel %d", handle->channel);
+    return ESP_OK;
 }
 
 // TODO: Implement current sensing and fault detection using the CS, ENA_DIAGA, and ENB_DIAGB pins.
